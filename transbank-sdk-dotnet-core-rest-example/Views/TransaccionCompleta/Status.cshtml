@@ -1,0 +1,27 @@
+@{
+    ViewBag.Title = "Transaccion Completa";
+}
+
+<h2>@ViewBag.Title</h2>
+<h4>FullTransaction.Status</h4>
+
+<h4>Request:</h4>
+<pre style="background-color: lightyellow;">
+POST: https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.0/transactions/@ViewBag.Token
+<code class="json">
+    {
+    
+    }
+</code>
+</pre>
+
+<h4>Response:</h4>
+<pre>
+<code>
+@ViewBag.Result.ToString();
+</code>
+</pre>
+
+
+<a href="javascript: document.globalForm.submit();" class="btn btn-primary">Reembolso de Transacción</a>
+@Html.ActionLink("Volver al inicio", "Index", "Home", null, new {@class = "btn btn-primary"})

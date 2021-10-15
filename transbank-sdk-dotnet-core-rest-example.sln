@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31727.386
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "transbank-sdk-dotnet-core-rest-example", "transbank-sdk-dotnet-core-rest-example\transbank-sdk-dotnet-core-rest-example.csproj", "{0516CCBB-66A7-4F77-AE83-E8B198C9FD1D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0516CCBB-66A7-4F77-AE83-E8B198C9FD1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0516CCBB-66A7-4F77-AE83-E8B198C9FD1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0516CCBB-66A7-4F77-AE83-E8B198C9FD1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0516CCBB-66A7-4F77-AE83-E8B198C9FD1D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4A6F141B-B922-491F-8805-CD20A4658C69}
+	EndGlobalSection
+EndGlobal

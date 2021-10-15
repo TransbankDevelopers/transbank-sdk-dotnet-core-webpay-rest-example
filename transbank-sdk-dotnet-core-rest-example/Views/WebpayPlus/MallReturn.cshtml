@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "Webpay Plus Mall";
+}
+
+<h2>@ViewBag.Title</h2>
+<h4>Transaction.Commit</h4>
+
+<h4>Request:</h4>
+<pre style="background-color: lightyellow;">
+PUT: https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.0/transactions/@ViewBag.Token
+<code class="json">
+    {}
+</code>
+</pre>
+
+<h4>Response:</h4>
+<pre>
+<code>
+@ViewBag.Result.ToString()
+</code>
+</pre>
+
+<form>
+    <input type="hidden" name="token_input" id="token_input" value="@ViewBag.Token">
+    <input type="hidden" name="amount" id="amount" value="@ViewBag.SaveAmount">
+    <input type="hidden" name="commerce_code" id="commerce_code" value="@ViewBag.SaveCommerceCode">
+    <input type="hidden" name="buy_order" id="buy_order" value="@ViewBag.SaveBuyOrder">
+</form>
+
+@if (ViewBag.Success)
+{
+    <p>Transacción confirmada con éxito.</p>
+}
+else
+{
+    <p>Error al confirmar transacción.</p>
+}
+<a href="javascript:appendToGlobalFormAndSend(['amount', 'commerce_code', 'buy_order']);" class="btn btn-danger">Reembolsar transaccion</a>
+@Html.ActionLink("Volver al inicio", "Index", "Home", null, new { @class = "btn btn-primary" })

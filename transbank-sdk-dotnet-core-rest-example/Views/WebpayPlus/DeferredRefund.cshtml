@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "Webpay Plus Diferido";
+}
+
+<h2>@ViewBag.Title</h2>
+<h4>DeferredTransaction.Refund</h4>
+
+<pre style="background-color: lightyellow;">
+<code>PUT: https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.0/transactions/<span id="token"></span></code>
+</pre>
+<h4>Indique transacción a reversar:</h4>
+
+<div class="form-group">
+    <label for="token_ws">Token</label>
+    <input type="text" name="token_input" id="token_input" class="form-control"/>
+</div>
+<div class="form-group">
+    <label for="amount">Monto</label>
+    <input type="text" class="form-control" id="amount" name="amount"/>
+</div>
+<a href="javascript: appendToGlobalFormAndSend(['amount']);" class="btn btn-danger">Ejecutar reembolso</a>
+
+@Html.ActionLink("Volver al inicio", "Index", "Home", null, new {@class = "btn btn-primary"})
+
+<script>
+    var token = window.localStorage.getItem("savedToken");
+    document.getElementById("token_input").value = token;
+    document.getElementById("token_ws").value = token;
+    var amount = window.localStorage.getItem("savedAmount");
+    document.getElementById("amount").value = amount;
+</script>

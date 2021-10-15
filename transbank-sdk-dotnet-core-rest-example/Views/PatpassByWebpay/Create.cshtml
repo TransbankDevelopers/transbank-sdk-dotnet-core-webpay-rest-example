@@ -1,0 +1,41 @@
+﻿@{
+    ViewBag.Title = "Patpass by Webpay";
+}
+
+<h2>@ViewBag.Title</h2>
+<h4>Transaction.Create</h4>
+
+<h4>Request:</h4>
+<pre style="background-color: lightyellow;">
+POST: https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.0/transactions
+    <code class="json">
+    {
+        "buy_order": "@ViewBag.BuyOrder",
+        "session_id": "@ViewBag.SessionId",
+        "amount": "@ViewBag.Amount",
+        "return_url": "@ViewBag.ReturnUrl",
+        "wpm_detail":
+        {
+            "service_id": "@ViewBag.service_id",
+            "card_holder_id": "@ViewBag.card_holder_id",
+            "card_holder_name": "@ViewBag.card_holder_name",
+            "card_holder_last_name1": "@ViewBag.card_holder_last_name1",
+            "card_holder_last_name2": "@ViewBag.card_holder_last_name2",
+            "card_holder_mail": "@ViewBag.card_holder_mail",
+            "cellphone_number": "@ViewBag.cellphone_number",
+            "expiration_date": "@ViewBag.expiration_date",
+            "commerce_mail": "@ViewBag.commerce_mail",
+            "uf_flag": "@ViewBag.uf_flag"
+        }
+    }
+    </code>
+</pre>
+
+<h4>Response:</h4>
+<pre>
+<code>
+    @ViewBag.Result
+</code>
+</pre>
+
+<a href="javascript: document.globalForm.submit();" class="btn btn-primary">Iniciar Transacción</a>

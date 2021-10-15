@@ -1,0 +1,43 @@
+@{
+    ViewBag.Title = "Webpay Plus Mall Diferido";
+}
+
+<h2>@ViewBag.Title</h2>
+<h4>Transaction.Create</h4>
+
+<h4>Request:</h4>
+@{
+    var transactionsOutput = "";
+
+    foreach (var transaction in ViewBag.Transactions)
+    {
+        transactionsOutput += "\t    {\n";
+        transactionsOutput += string.Format("\t\t\"amount\": {0},\n", (object) transaction.Amount);
+        transactionsOutput += string.Format("\t\t\"commerce_code\": {0},\n", (object) transaction.CommerceCode);
+        transactionsOutput += string.Format("\t\t\"buy_order\": {0}\n", (object) transaction.BuyOrder);
+        transactionsOutput += "\t    },\n";
+    }
+    transactionsOutput = transactionsOutput.Remove(transactionsOutput.LastIndexOf("\n"), transactionsOutput.Length - transactionsOutput.LastIndexOf("\n"));
+}
+<pre style="background-color: lightyellow;">
+POST: https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.0/transactions
+<code class="json">
+    {
+        "buy_order": "@ViewBag.BuyOrder",
+        "session_id": "@ViewBag.SessionId",
+        "return_url": "@ViewBag.ReturnUrl",
+        "details": [
+@transactionsOutput
+        ]
+    }
+</code>
+</pre>
+
+<h4>Response:</h4>
+<pre>
+<code>
+@ViewBag.Result
+</code>
+</pre>
+
+<a href="javascript: document.globalForm.submit();" class="btn btn-primary">Iniciar Transacción</a>

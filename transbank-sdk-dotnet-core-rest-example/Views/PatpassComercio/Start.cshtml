@@ -1,0 +1,48 @@
+@{
+    ViewBag.Title = "Patpass Comercio";
+}
+
+<h2>@ViewBag.Title</h2>
+<h4>Inscription.Start</h4>
+
+<h4>Request:</h4>
+<pre style="background-color: lightyellow;">
+POST: https://www.pagoautomaticocontarjetas.cl/restpatpass/v1/services/patInscription
+<code class="json">
+    {
+        "url": "@ViewBag.Url"
+        "name": "@ViewBag.Name"
+        "f_lastname": "@ViewBag.F_Lastname"
+        "s_lastname": "@ViewBag.S_Lastname"
+        "rut": "@ViewBag.Rut"
+        "service_id": "@ViewBag.Service_id"
+        "final_url": "@ViewBag.Final_url"
+        "commerce_code": "@ViewBag.Commerce_code"
+        "max_amount": "@ViewBag.Max_amount"
+        "phone_number": "@ViewBag.Phone_number"
+        "mobile_number": "@ViewBag.Mobile_number"
+        "patpass_name": "@ViewBag.Patpass_name"
+        "client_email": "@ViewBag.Client_name"
+        "commerce_email": "@ViewBag.Commerce_email"
+        "address": "@ViewBag.Address"
+        "city": "@ViewBag.City"
+    }
+    </code>
+</pre>
+
+<h4>Response:</h4>
+<pre>
+    <code class="json">
+        {
+        "url": "@ViewBag.Action"
+        "token": "@ViewBag.Token"
+        }
+    </code>
+</pre>
+
+<a href="javascript: document.globalForm.submit();" class="btn btn-primary">Iniciar Inscripcion</a>
+<script>
+    document.globalForm.innerHTML += '<input type="hidden" name="tokenComercio" id="tokenComercio" value="@ViewBag.Token" />'
+</script>
+
+

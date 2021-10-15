@@ -1,0 +1,45 @@
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Oneclick Mall";
+}
+
+<h2>@ViewBag.Title</h2>
+<h4>MallTransaction.Authorize</h4>
+
+<h4>Request:</h4>
+<pre style="background-color: lightyellow;">
+POST: https://webpay3gint.transbank.cl/rswebpaytransaction/api/oneclick/v1.0/transactions
+<code class="json">
+    {
+        "user_name": "@ViewBag.UserName",
+        "tbk_user": "@ViewBag.TbkUser",
+        "buy_order": "@ViewBag.BuyOrder",
+        "details": [
+            {
+                "amount": "@ViewBag.Details.Amount",
+                "commerce_code": "@ViewBag.Details.CommerceCode",
+                "buy_order": "@ViewBag.Details.BuyOrder",
+                "installments_number": "@ViewBag.Details.InstallmentsNumber"
+            }
+        ]
+    }
+</code>
+</pre>
+
+<h4>Response:</h4>
+<pre>
+<code>
+@ViewBag.Result
+</code>
+</pre>
+
+<a href="javascript: document.globalForm.submit();" class="btn btn-primary">Refund Oneclick Mall Payment</a>
+
+<script>
+    document.globalForm.innerHTML += '<input type="hidden" name="TBK_TOKEN" id="TBK_TOKEN" value="@ViewBag.TbkUser" />';
+    document.globalForm.innerHTML += '<input type="hidden" name="amount" id="amount" value="@ViewBag.Details.Amount" />';
+    document.globalForm.innerHTML += '<input type="hidden" name="child_commerce_code" id="child_commerce_code" value="@ViewBag.Details.CommerceCode" />';
+    document.globalForm.innerHTML += '<input type="hidden" name="child_buy_order" id="child_buy_order" value="@ViewBag.Details.BuyOrder" />';
+    document.globalForm.innerHTML += '<input type="hidden" name="buy_order" id="buy_order" value="@ViewBag.BuyOrder" />';
+    document.globalForm.innerHTML += '<input type="hidden" name="user_name" id="user_name" value="' + window.localStorage.getItem("user_name") + '" />';
+</script>

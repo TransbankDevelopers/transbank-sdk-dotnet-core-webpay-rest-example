@@ -1,0 +1,41 @@
+@{
+    ViewBag.Title = "Webpay Plus Mall Diferido";
+}
+
+<h2>@ViewBag.Title</h2>
+<h4>MallDeferredTransaction.Commit</h4>
+
+<h4>Request:</h4>
+<pre style="background-color: lightyellow;">
+PUT: https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.0/transactions/@ViewBag.Token
+<code class="json">
+    {}
+</code>
+</pre>
+
+<h4>Response:</h4>
+<pre><code>@ViewBag.Result.ToString()</code></pre>
+
+@if (ViewBag.ResponseCode == 0)
+{
+    <p>Transacción confirmada con éxito.</p>
+}
+else
+{
+    <p>Error al confirmar transacción.</p>
+}
+<a href="javascript: document.globalForm.submit();" class="btn btn-info">Capturar transacción</a>
+@Html.ActionLink("Volver al inicio", "Index", "Home", null, new {@class = "btn btn-primary"})
+
+<script>
+    document.globalForm.innerHTML += '<input type="hidden" name="buy_order" id="buy_order" value="@ViewBag.SaveBuyOrder" />'
+    document.globalForm.innerHTML += '<input type="hidden" name="authorization_code" id="authorization_code" value="@ViewBag.SaveAuthorizationCode" />'
+    document.globalForm.innerHTML += '<input type="hidden" name="capture_amount" id="capture_amount" value="@ViewBag.SaveAmount" />'
+    document.globalForm.innerHTML += '<input type="hidden" name="commerce_code" id="commerce_code" value="@ViewBag.SaveCommerceCode" />'
+
+    window.localStorage.setItem('Token','@ViewBag.Token');
+    window.localStorage.setItem('BuyOrder','@ViewBag.SaveBuyOrder');
+    window.localStorage.setItem('AuthorizationCode','@ViewBag.SaveAuthorizationCode');
+    window.localStorage.setItem('CaptureAmount','@ViewBag.SaveAmount');
+    window.localStorage.setItem('CommerceCode','@ViewBag.SaveCommerceCode');
+</script>

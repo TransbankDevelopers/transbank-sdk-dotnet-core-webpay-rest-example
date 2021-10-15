@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = "Webpay Plus";
+}
+
+<h2>@ViewBag.Title</h2>
+<h4>Transaction.Refund</h4>
+
+<pre style="background-color: lightyellow;">
+<code>PUT: https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.0/transactions/<span id="token"></span></code>
+</pre>
+<h4>Indique transacción a reversar:</h4>
+
+<div class="form-group">
+    <label for="token_ws">Token</label>
+    <input type="text" name="token_input" id="token_input" class="form-control"/>
+</div>
+<a href="javascript: sendToken();" class="btn btn-danger">Ejecutar reembolso</a>
+
+@Html.ActionLink("Volver al inicio", "Index", "Home", null, new {@class = "btn btn-primary"})
+
+<script>
+    var token = window.localStorage.getItem("savedToken");
+    document.getElementById("token_input").value = token;
+    document.getElementById("token_ws").value = token;
+</script>

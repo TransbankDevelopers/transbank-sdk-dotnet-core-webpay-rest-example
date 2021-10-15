@@ -1,0 +1,56 @@
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Oneclick Mall Deferred";
+}
+
+<h2>@ViewBag.Title</h2>
+<h4>MallTransaction.Authorize</h4>
+
+<h4>Request:</h4>
+<pre style="background-color: lightyellow;">
+POST: https://webpay3gint.transbank.cl/rswebpaytransaction/api/oneclick/v1.0/transactions
+<code class="json">
+    {
+        "user_name": "@ViewBag.UserName",
+        "tbk_user": "@ViewBag.TbkUser",
+        "buy_order": "@ViewBag.BuyOrder",
+        "details": [
+            {
+                "amount": "@ViewBag.Details[0].Amount",
+                "commerce_code": "@ViewBag.Details[0].CommerceCode",
+                "buy_order": "@ViewBag.Details[0].BuyOrder",
+                "installments_number": "@ViewBag.Details[0].InstallmentsNumber"
+            }
+        ]
+    }
+</code>
+</pre>
+
+<h4>Response:</h4>
+<pre>
+<code>
+@ViewBag.Result
+</code>
+</pre>
+
+<script>
+    window.localStorage.setItem('commerce_code', '@ViewBag.BuyOrder');
+    window.localStorage.setItem('buy_order', '@ViewBag.BuyOrder');
+    window.localStorage.setItem('child_commerce_code', '@ViewBag.Result.Details[0].CommerceCode');
+    window.localStorage.setItem('child_buy_order', '@ViewBag.Result.Details[0].BuyOrder');
+    window.localStorage.setItem('amount', '@ViewBag.Result.Details[0].Amount');
+    window.localStorage.setItem('authorization_code', '@ViewBag.Result.Details[0].AuthorizationCode');
+    Window.localStorage.setItem('tbk_user', '@ViewBag.TbkUser');
+</script>
+
+<input type="text" name="amount_in" id="amount_in" value="@ViewBag.Result.Details[0].Amount" />
+<a href="javascript: document.globalForm.submit();" class="btn btn-primary">Capture Oneclick Mall Deferred Payment</a>
+
+<script>
+    document.globalForm.innerHTML += '<input type="hidden" name="TBK_TOKEN" id="TBK_TOKEN" value="@ViewBag.TbkUser" />';
+    document.globalForm.innerHTML += '<input type="hidden" name="capture_amount" id="capture_amount" value="' + document.getElementById("amount_in").value + '" />';
+    document.globalForm.innerHTML += '<input type="hidden" name="child_commerce_code" id="child_commerce_code" value="@ViewBag.Result.Details[0].CommerceCode" />';
+    document.globalForm.innerHTML += '<input type="hidden" name="child_buy_order" id="child_buy_order" value="@ViewBag.Result.Details[0].BuyOrder" />';
+    document.globalForm.innerHTML += '<input type="hidden" name="authorization_code" id="authorization_code" value="@ViewBag.Result.Details[0].AuthorizationCode" />';
+    document.globalForm.innerHTML += '<input type="hidden" name="user_name" id="user_name" value="' + window.localStorage.getItem("user_name") + '" />';
+</script>

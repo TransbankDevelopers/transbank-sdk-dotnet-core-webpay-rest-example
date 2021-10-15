@@ -1,0 +1,28 @@
+@{
+    ViewBag.Title = "Transaccion Completa";
+}
+
+<h2>@ViewBag.Title</h2>
+<h4>FullTransaction.Installments</h4>
+<pre style="background-color: lightyellow;">
+POST: https://webpay3gint.transbank.cl//rswebpaytransaction/api/webpay/v1.0/transactions/@ViewBag.Token
+    <code class="json">
+        {
+            "installments_number": "@ViewBag.InstallmentsNumber"
+        }
+    </code>
+</pre>
+
+<h4>Response:</h4>
+<pre>
+<code>
+@ViewBag.Result.ToString()
+</code>
+</pre>
+
+<a href="javascript: document.globalForm.submit();" class="btn btn-primary">Definir Cuotas</a>
+@Html.ActionLink("Volver al inicio", "Index", "Home", null, new {@class = "btn btn-primary"})
+
+<script >
+document.globalForm.innerHTML += '<input type="hidden" name="id_query_installments" value="@ViewBag.SaveIdQueryInstallments" />'
+</script>

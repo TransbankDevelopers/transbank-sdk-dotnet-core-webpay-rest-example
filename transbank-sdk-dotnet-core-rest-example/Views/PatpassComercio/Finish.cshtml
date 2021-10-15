@@ -1,0 +1,33 @@
+@{
+    ViewBag.Title = "Patpass Comercio";
+}
+
+<h2>@ViewBag.Title</h2>
+<h4>Inscription.Finish</h4>
+<h4>Response:</h4>
+<pre>
+    <code class="json">
+        {
+        "j_token": "@ViewBag.Token"
+        }
+    </code>
+</pre>
+
+
+
+<h4>Inscription.Status</h4>
+<h4>Request:</h4>
+<pre style="background-color: lightyellow;">
+POST: https://www.pagoautomaticocontarjetas.cl/restpatpass/v1/services/status
+    <code class="json">
+        {
+            "token": "@ViewBag.Token"
+        }
+    </code>
+</pre>
+
+
+<a href="javascript: document.globalForm.submit();" class="btn btn-primary">Obtener Status</a>
+<script>
+    document.globalForm.innerHTML += '<input type="hidden" name="tokenComercio" id="tokenComercio" value="@ViewBag.Token" />'
+</script>

@@ -1,0 +1,34 @@
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Oneclick Mall";
+}
+
+<h2>@ViewBag.Title</h2>
+<h4>Inscription.Start</h4>
+
+<h4>Request:</h4>
+<pre style="background-color: lightyellow;">
+POST: https://webpay3gint.transbank.cl/rswebpaytransaction/api/oneclick/v1.0/inscriptions
+<code class="json">
+    {
+        "user_name": "@ViewBag.UserName",
+        "email": "@ViewBag.Email"
+        "return_url": "@ViewBag.ReturnUrl"
+    }
+</code>
+</pre>
+
+<h4>Response:</h4>
+<pre>
+<code>
+    @ViewBag.Result
+</code>
+</pre>
+
+<a href="javascript: document.globalForm.submit();" class="btn btn-primary">Iniciar Transacción</a>
+
+<script>
+    document.globalForm.innerHTML += '<input type="hidden" name="TBK_TOKEN" id="TBK_TOKEN" value="@ViewBag.Token" />'
+    
+    window.localStorage.setItem('user_name','@ViewBag.UserName');
+</script>

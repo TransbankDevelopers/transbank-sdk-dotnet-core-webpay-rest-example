@@ -1,0 +1,31 @@
+
+@{
+    ViewBag.Title = "Transacción Completa";
+}
+
+<h2>@ViewBag.Title</h2>
+<h4>Transaction.Commit</h4>
+
+<h4>Request:</h4>
+<pre style="background-color: lightyellow;">
+PUT: https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.0/transactions/@ViewBag.Token
+<code class="json">
+{
+   "id_query_installments": "@ViewBag.SaveIdQueryInstallments",
+   "deferred_period_index": "@ViewBag.DeferredPeriodIndex",
+   "grace_period": "@ViewBag.GracePrediods" 
+{
+</code>
+
+</pre>
+
+<h4>Response:</h4>
+<pre>
+<code>
+@ViewBag.Result.ToString()
+</code>
+</pre>
+
+
+<a href="javascript: document.globalForm.submit();" class="btn btn-primary">Ver Status de Transacción</a>
+@Html.ActionLink("Volver al inicio", "Index", "Home", null, new {@class = "btn btn-primary"})

@@ -1,0 +1,37 @@
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Oneclick Mall Deferred";
+}
+
+<h2>@ViewBag.Title</h2>
+<h4>Inscription.Finish</h4>
+
+<h4>Request:</h4>
+<pre style="background-color: lightyellow;">
+PUT: https://webpay3gint.transbank.cl/rswebpaytransaction/api/oneclick/v1.0/inscriptions/@ViewBag.Token 
+<code class="json">
+    NO REQUEST BODY
+</code>
+</pre>
+
+<h4>Response:</h4>
+<pre>
+<code>
+@ViewBag.Result
+</code>
+</pre>
+
+<input type="text" name="amount_in" id="amount_in" value="1000"/>
+<a href="javascript: onSubmit();" class="btn btn-primary">Authorizar Transacción</a>
+
+<script>
+    function onSubmit() {
+        document.globalForm.innerHTML += '<input type="hidden" name="amount" id="amount" value="' + document.getElementById("amount_in").value + '" />';
+        document.globalForm.submit();
+    }
+    
+    document.globalForm.innerHTML += '<input type="hidden" name="user_name" id="user_name" value="' + window.localStorage.getItem("user_name") + '" />';
+    document.globalForm.innerHTML += '<input type="hidden" name="tbk_user" id="tbk_user" value="@ViewBag.TbkUser" />';
+    
+    window.localStorage.setItem('tbk_user','@ViewBag.TbkUser');
+</script>

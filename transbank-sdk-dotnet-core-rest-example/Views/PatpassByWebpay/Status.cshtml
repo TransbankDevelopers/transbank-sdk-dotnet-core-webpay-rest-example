@@ -1,0 +1,35 @@
+﻿@{
+    ViewBag.Title = "Patpass by Webpay";
+}
+
+<h2>@ViewBag.Title</h2>
+<h4>Transaction.Status</h4>
+
+<h4>Request:</h4>
+<pre style="background-color: lightyellow;">
+POST: https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.0/transactions/<span id="token"></span>/refunds
+<code class="json">
+    {}
+</code>
+</pre>
+
+<h4>Response:</h4>
+<pre>
+<code>
+@ViewBag.Result.ToString()
+</code>
+</pre>
+
+@if (ViewBag.Result.ResponseCode == 0)
+{
+    <p>Solicitud de estado exitoso.</p>
+}
+else
+{
+    <p>Error al solicitar estado de la transacción.</p>
+}
+
+@Html.ActionLink("Volver al inicio", "Index", "Home", null, new { @class = "btn btn-primary", style = "margin-top: 20px;" })
+
+<script>var token = window.localStorage.getItem("savedToken");
+    document.getElementById("token").innerHTML = token;</script>
