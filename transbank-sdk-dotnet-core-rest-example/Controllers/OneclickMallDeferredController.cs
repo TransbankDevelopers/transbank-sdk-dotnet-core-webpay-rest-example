@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Transbank.Common;
 using Transbank.Webpay.Common;
 using Transbank.Webpay.Oneclick;
 
@@ -31,7 +32,8 @@ namespace transbanksdkdotnetrestexample.Controllers
             ViewBag.Email = email;
             ViewBag.ReturnUrl = returnUrl;
 
-            var response = MallDeferredInscription.Start(userName, email, returnUrl);
+            var ins = new MallInscription(new Options(IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+            var response = ins.Start(userName, email, returnUrl);
             ViewBag.Result = response;
             
             ViewBag.Action = response.Url;
@@ -52,7 +54,8 @@ namespace transbanksdkdotnetrestexample.Controllers
         {
             ViewBag.Token = tbk_token;
 
-            var result = MallDeferredInscription.Finish(tbk_token);
+            var ins = new MallInscription(new Options(IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+            var result = ins.Finish(tbk_token);
 
             ViewBag.AuthorizationCode = result.AuthorizationCode;
             ViewBag.ResponseCode = result.ResponseCode;
@@ -83,7 +86,8 @@ namespace transbanksdkdotnetrestexample.Controllers
                 new PaymentRequest(childCommerceCode, childBuyOrder, amount, installmentsNumber)
             };
 
-            Transbank.Webpay.Oneclick.Responses.MallAuthorizeResponse result = MallDeferredTransaction.Authorize(userName, tbkUser, buyOrder, details);
+            var tx = new MallTransaction(new Options(IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+            Transbank.Webpay.Oneclick.Responses.MallAuthorizeResponse result = tx.Authorize(userName, tbkUser, buyOrder, details);
             Console.WriteLine(result);
 
             ViewBag.UserName = userName;
@@ -104,7 +108,8 @@ namespace transbanksdkdotnetrestexample.Controllers
             var ChildbuyOrder = Request.Form["child_buy_order"];
             decimal.TryParse(Request.Form["capture_amount"], out decimal amount);
             var authorizationCode = Request.Form["authorization_code"];
-            var result = MallDeferredTransaction.Capture(ChildcommerceCode, ChildbuyOrder, amount, authorizationCode);
+            var tx = new MallTransaction(new Options(IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+            var result = tx.Capture(ChildcommerceCode, ChildbuyOrder, authorizationCode, amount);
 
             ViewBag.UserName = Request.Form["userName"];
             ViewBag.ChildCommerceCode = ChildcommerceCode.ToString();
@@ -124,7 +129,8 @@ namespace transbanksdkdotnetrestexample.Controllers
             var userName = Request.Form["user_name"];
             var tbkUser = Request.Form["TBK_TOKEN"];
 
-            MallDeferredInscription.Delete(userName, tbkUser);
+            var ins = new MallInscription(new Options(IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+            ins.Delete(tbkUser, userName);
 
             ViewBag.UserName = userName;
             ViewBag.TbkUser = tbkUser;
@@ -141,7 +147,8 @@ namespace transbanksdkdotnetrestexample.Controllers
             var token = Request.Form["TBK_TOKEN"];
             var userName = Request.Form["user_name"];
 
-            var result = MallDeferredTransaction.Refund(buyOrder, childCommerceCode,childBuyOrder,amount);
+            var tx = new MallTransaction(new Options(IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+            var result = tx.Refund(buyOrder, childCommerceCode, childBuyOrder, amount);
             Console.WriteLine(result);
 
             ViewBag.BuyOrder = buyOrder;

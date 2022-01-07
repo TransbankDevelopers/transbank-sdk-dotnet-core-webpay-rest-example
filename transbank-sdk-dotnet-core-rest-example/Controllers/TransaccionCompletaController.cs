@@ -35,7 +35,8 @@ namespace transbanksdkdotnetrestexample.Controllers
             UrlHelper urlHelper = new UrlHelper(_actionContextAccessor.ActionContext);
             var returnUrl = urlHelper.Action("Installments", "TransaccionCompleta", null, Request.Scheme);
 
-            var result = FullTransaction.Create(
+
+            var result = (new FullTransaction()).Create(
                 buyOrder: buy_order,
                 sessionId: session_id,
                 amount: amount,
@@ -68,7 +69,7 @@ namespace transbanksdkdotnetrestexample.Controllers
             ViewBag.SaveToken = token;
             var returnUrl = urlHelper.Action("Commit", "TransaccionCompleta", null, Request.Scheme);
             ViewBag.Action = returnUrl;
-            var result = FullTransaction.Installments(
+            var result = (new FullTransaction()).Installments(
                 token,
                 installments_number);
             ViewBag.InstallmentsNumber = installments_number;
@@ -87,8 +88,8 @@ namespace transbanksdkdotnetrestexample.Controllers
             var deferredPeriodsIndex = 10;
             var gracePeriods = false;
 
-            var result = FullTransaction.Commit(token, idQueryInstallments, deferredPeriodsIndex, gracePeriods);
-            
+            var result = (new FullTransaction()).Commit(token, idQueryInstallments, deferredPeriodsIndex, gracePeriods);
+
             UrlHelper urlHelper = new UrlHelper(_actionContextAccessor.ActionContext);
             var returnUrl = urlHelper.Action("Status", "TransaccionCompleta", null, Request.Scheme);
 
@@ -108,8 +109,8 @@ namespace transbanksdkdotnetrestexample.Controllers
         {
             var token = Request.Form["token_ws"];
 
-            var result = FullTransaction.Status(token);
-            
+            var result = (new FullTransaction()).Status(token);
+
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
             var returnUrl = urlHelper.Action("Refund", "TransaccionCompleta", null, Request.Scheme);
 
@@ -126,8 +127,8 @@ namespace transbanksdkdotnetrestexample.Controllers
             var token = Request.Form["token_ws"];
             var amount = 10000;
 
-            var result = FullTransaction.Refund(token, amount);
-            
+            var result = (new FullTransaction()).Refund(token, amount);
+
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
             var returnUrl = urlHelper.Action("Status", "TransaccionCompleta", null, Request.Scheme);
 
