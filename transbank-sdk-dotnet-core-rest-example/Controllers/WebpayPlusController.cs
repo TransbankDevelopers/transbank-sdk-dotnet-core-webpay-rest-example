@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Transbank.Common;
 using Transbank.Webpay.Common;
 using Transbank.Webpay.WebpayPlus;
 
@@ -30,8 +31,8 @@ namespace transbanksdkdotnetrestexample.Controllers
             var sessionId = random.Next(999999999).ToString();
             var amount = random.Next(1000, 999999);
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
-            var returnUrl = urlHelper.Action("NormalReturn", "WebpayPlus", null, Request.Scheme); 
-            var result = Transaction.Create(buyOrder, sessionId, amount, returnUrl);
+            var returnUrl = urlHelper.Action("NormalReturn", "WebpayPlus", null, Request.Scheme);
+            var result = (new Transaction()).Create(buyOrder, sessionId, amount, returnUrl);
 
             ViewBag.BuyOrder = buyOrder;
             ViewBag.SessionId = sessionId;
@@ -45,7 +46,7 @@ namespace transbanksdkdotnetrestexample.Controllers
 
         public ActionResult NormalReturn(String token_ws)
         {
-            var result = Transaction.Commit(token_ws);
+            var result = (new Transaction()).Commit(token_ws);
 
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
@@ -69,7 +70,7 @@ namespace transbanksdkdotnetrestexample.Controllers
         {
             var token = Request.Form["token_ws"];
             var refundAmount = 500;
-            var result = Transaction.Refund(token, refundAmount);
+            var result = (new Transaction()).Refund(token, refundAmount);
 
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
             ViewBag.Action = urlHelper.Action("ExecuteStatus", "WebpayPlus", null, Request.Scheme);
@@ -93,7 +94,7 @@ namespace transbanksdkdotnetrestexample.Controllers
         public ActionResult ExecuteStatus()
         {
             var token = Request.Form["token_ws"];
-            var result = Transaction.Status(token);
+            var result = (new Transaction()).Status(token);
 
             ViewBag.Result = result;
 
@@ -112,7 +113,8 @@ namespace transbanksdkdotnetrestexample.Controllers
             var amount = random.Next(1000, 999999);
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
             var returnUrl = urlHelper.Action("DeferredReturn", "WebpayPlus", null, Request.Scheme);
-            var result = DeferredTransaction.Create(buyOrder, sessionId, amount, returnUrl);
+            var tx = new Transaction(new Options(IntegrationCommerceCodes.WEBPAY_PLUS_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+            var result = tx.Create(buyOrder, sessionId, amount, returnUrl);
 
             ViewBag.BuyOrder = buyOrder;
             ViewBag.SessionId = sessionId;
@@ -127,7 +129,8 @@ namespace transbanksdkdotnetrestexample.Controllers
 
         public ActionResult DeferredReturn(String token_ws)
         {
-            var result = DeferredTransaction.Commit(token_ws);
+            var tx = new Transaction(new Options(IntegrationCommerceCodes.WEBPAY_PLUS_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+            var result = tx.Commit(token_ws);
 
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
@@ -148,7 +151,8 @@ namespace transbanksdkdotnetrestexample.Controllers
             var buyOrder = Request.Form["buy_order"];
             var authorizationCode = Request.Form["authorization_code"];
             var captureAmount = decimal.Parse(Request.Form["capture_amount"]);
-            var result = DeferredTransaction.Capture(token, buyOrder, authorizationCode, captureAmount);
+            var tx = new Transaction(new Options(IntegrationCommerceCodes.WEBPAY_PLUS_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+            var result = tx.Capture(token, buyOrder, authorizationCode, captureAmount);
 
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
             ViewBag.Action = urlHelper.Action("ExecuteDeferredRefund", "WebpayPlus", null, Request.Scheme);
@@ -175,7 +179,8 @@ namespace transbanksdkdotnetrestexample.Controllers
         {
             var token = Request.Form["token_ws"];
             var amount = decimal.Parse(Request.Form["amount"]);
-            var result = DeferredTransaction.Refund(token, amount);
+            var tx = new Transaction(new Options(IntegrationCommerceCodes.WEBPAY_PLUS_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+            var result = tx.Refund(token, amount);
 
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
             ViewBag.Action = urlHelper.Action("ExecuteDeferredStatus", "WebpayPlus", null, Request.Scheme);
@@ -197,7 +202,8 @@ namespace transbanksdkdotnetrestexample.Controllers
         public ActionResult ExecuteDeferredStatus()
         {
             var token = Request.Form["token_ws"];
-            var result = DeferredTransaction.Status(token);
+            var tx = new Transaction(new Options(IntegrationCommerceCodes.WEBPAY_PLUS_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+            var result = tx.Status(token);
 
             ViewBag.Result = result;
 
@@ -228,7 +234,7 @@ namespace transbanksdkdotnetrestexample.Controllers
                 random.Next(9999999).ToString()
             ));
 
-            var result = MallTransaction.Create(buyOrder, sessionId, returnUrl, transactions);
+            var result = (new MallTransaction()).Create(buyOrder, sessionId, returnUrl, transactions);
 
             ViewBag.Result = result;
             ViewBag.BuyOrder = buyOrder;
@@ -243,7 +249,7 @@ namespace transbanksdkdotnetrestexample.Controllers
 
         public ActionResult MallReturn(String token_ws)
         {
-            var result = MallTransaction.Commit(token_ws);
+            var result = (new MallTransaction()).Commit(token_ws);
 
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
@@ -282,7 +288,7 @@ namespace transbanksdkdotnetrestexample.Controllers
             ViewBag.SaveToken = token;
             ViewBag.SaveBuyOrder = buyOrder;
 
-            var result = MallTransaction.Refund(token, buyOrder, commerceCode, amount);
+            var result = (new MallTransaction()).Refund(token, buyOrder, commerceCode, amount);
 
             ViewBag.Result = result;
 
@@ -300,7 +306,7 @@ namespace transbanksdkdotnetrestexample.Controllers
         {
             var token = Request.Form["token_ws"];
 
-            var result = MallTransaction.Status(token);
+            var result = (new MallTransaction()).Status(token);
 
             ViewBag.Result = result;
             ViewBag.SaveToke = token;
@@ -330,8 +336,8 @@ namespace transbanksdkdotnetrestexample.Controllers
                 random.Next(9999999).ToString()
             ));
 
-            MallDeferredTransaction.CommerceCode = "597055555581";
-            var result = MallDeferredTransaction.Create(buyOrder, sessionId, returnUrl, transactions);
+            var tx = new MallTransaction(new Options(IntegrationCommerceCodes.WEBPAY_PLUS_MALL_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+            var result = tx.Create(buyOrder, sessionId, returnUrl, transactions);
 
             ViewBag.Result = result;
             ViewBag.BuyOrder = buyOrder;
@@ -346,7 +352,7 @@ namespace transbanksdkdotnetrestexample.Controllers
         
         public ActionResult MallDeferredCommit(String token_ws)
         {
-            var result = MallDeferredTransaction.Commit(token_ws);
+            var result = (new MallTransaction()).Commit(token_ws);
 
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
@@ -370,8 +376,10 @@ namespace transbanksdkdotnetrestexample.Controllers
             var buyOrder = Request.Form["buy_order"];
             var authorizationCode = Request.Form["authorization_code"];
             var captureAmount = decimal.Parse(Request.Form["capture_amount"]);
-            string commerceCode = Request.Form["commerce_code"];;
-            var result = MallDeferredTransaction.Capture(token, commerceCode, buyOrder, authorizationCode, captureAmount);
+            string commerceCode = Request.Form["commerce_code"];
+
+            var tx = new MallTransaction(new Options(IntegrationCommerceCodes.WEBPAY_PLUS_MALL_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+            var result = tx.Capture(token, commerceCode, buyOrder, authorizationCode, captureAmount);
 
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
             ViewBag.Action = urlHelper.Action("ExecuteMallDeferredRefund", "WebpayPlus", null, Request.Scheme);
@@ -402,7 +410,8 @@ namespace transbanksdkdotnetrestexample.Controllers
             ViewBag.SaveToken = token;
             ViewBag.SaveBuyOrder = buyOrder;
 
-            var result = MallDeferredTransaction.Refund(token, buyOrder, commerceCode, amount);
+            var tx = new MallTransaction(new Options(IntegrationCommerceCodes.WEBPAY_PLUS_MALL_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+            var result = tx.Refund(token, buyOrder, commerceCode, amount);
 
             ViewBag.Result = result;
 
@@ -413,7 +422,7 @@ namespace transbanksdkdotnetrestexample.Controllers
         {
             var token = Request.Form["token_ws"];
 
-            var result = MallDeferredTransaction.Status(token);
+            var result = (new MallTransaction()).Status(token);
 
             ViewBag.Result = result;
             ViewBag.SaveToke = token;
