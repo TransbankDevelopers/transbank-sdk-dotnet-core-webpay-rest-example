@@ -1,0 +1,34 @@
+﻿
+@{
+    Html.RenderPartial("~/Views/Shared/navbar-patpass.cshtml");
+}
+
+<div class="row">
+    <div class="col">
+        <h2>Inscripción finalizada</h2>
+        La inscripción ya se encuentra finalizada.
+    </div>
+</div><br>
+
+
+<div class="row">
+    <h2>Otras utilidades</h2>
+    Luego de realizar la inscripcion puedes visualizar el voucher.
+</div><br>
+
+<div class="row">
+    <div class="card">
+        <div class="card-body">
+        <h6 class="card-title">Formulario de redirección al voucher</h6>
+            <form action="@ViewBag.UrlVoucher" method="POST">
+            <div class="mb-3">
+            <label for="tokenComercio" class="form-label">Token</label>
+            <input type="text" class="form-control" name="tokenComercio" value="@ViewBag.Token">
+            </div>
+            <button type="submit" class="btn btn-primary">VER VOUCHER</button>
+        </form>
+        </div>
+    </div>
+</div><br>
+
+

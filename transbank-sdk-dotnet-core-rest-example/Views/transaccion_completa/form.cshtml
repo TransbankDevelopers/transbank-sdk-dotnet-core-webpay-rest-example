@@ -1,0 +1,67 @@
+﻿
+
+
+
+
+
+    @{Html.RenderPartial("~/Views/Shared/navbar-txcompleta.cshtml");}
+
+    <div class="row">
+        <div class="col">
+            <h2>Formulario</h2>
+            Para poder comenzar con la transacción primero necesitas obtener los datos de la tarjeta de crédito del tarjetahabiente.
+        </div>
+    </div><br>
+
+    <div class="row">
+        <div class="col-6">
+            <h4>Formulario de pago</h4>
+            Para comenzar debes obtener los datos de la tarjeta sobre la cual se desea generar una transacción.
+        </div>
+        <div class="col-6">
+
+            <div class="card">
+              <div class="card-body">
+                <h6 class="card-title">Formulario de pago</h6>
+                <form action="@ViewBag.create-endpoint")}" method="POST">
+                    <div class="form-floating mb-3">
+                      <input type="text" class="form-control" id="card_number" name="card_number" value="4051885600446623">
+                      <label for="card_number">Número de tarjeta</label>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                          <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="month" name="month" value="12">
+                            <label for="month">Mes</label>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="year" name="year" value="29">
+                            <label for="year">Año</label>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="cvv" name="cvv" value="123">
+                            <label for="cvv">CVV</label>
+                          </div>
+                        </div>
+                      </div>
+                    <div class="form-floating mb-3">
+                      <input type="text" class="form-control" id="amount" name="amount" value="@ViewBag.Amount">
+                      <label for="amount">Monto</label>
+                    </div>
+
+                  <button type="submit" class="btn btn-primary">PAGAR</button>
+                </form>
+              </div>
+            </div>
+
+        </div>
+    </div><br>
+    <br>
+
+    
+
+

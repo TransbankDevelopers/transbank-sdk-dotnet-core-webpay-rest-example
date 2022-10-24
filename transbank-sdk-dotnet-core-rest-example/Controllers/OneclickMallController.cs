@@ -23,7 +23,7 @@ namespace transbanksdkdotnetrestexample.Controllers
         {
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
             var returnUrl = urlHelper.Action("InscriptionFinish", "OneclickMall", null, Request.Scheme);
-            var userName = "goncafa";
+            var userName = "18152024-k";
             var email = $"{RandomString(5)}@{RandomString(5)}.com";
 
             ViewBag.UserName = userName;

@@ -6,6 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.WebEncoders;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 
 namespace transbank_sdk_dotnet_core_rest_example
 {
@@ -26,6 +29,13 @@ namespace transbank_sdk_dotnet_core_rest_example
             services
             .AddSingleton<IActionContextAccessor, ActionContextAccessor>()
             .AddMvc();
+
+            services.Configure<WebEncoderOptions>(options =>
+            {
+                options.TextEncoderSettings = new TextEncoderSettings(
+                    UnicodeRanges.BasicLatin,
+                    UnicodeRanges.Latin1Supplement);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

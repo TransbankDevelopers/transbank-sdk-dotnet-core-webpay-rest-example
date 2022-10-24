@@ -99,6 +99,13 @@ namespace transbanksdkdotnetrestexample.Controllers
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
             ViewBag.Action = urlHelper.Action("TransactionCapture", "OneclickMallDeferred", null, Request.Scheme);
 
+            var detail = result.Details[0];
+            /*
+            var r1 = tx.IncreaseAmount(detail.CommerceCode, detail.BuyOrder, detail.AuthorizationCode, 1000);
+            var r2 = tx.IncreaseAuthorizationDate(detail.CommerceCode, detail.BuyOrder, detail.AuthorizationCode);
+            var r3 = tx.ReversePreAuthorizedAmount(detail.CommerceCode, detail.BuyOrder, detail.AuthorizationCode, 1000);
+            var r4 = tx.DeferredCaptureHistory(detail.CommerceCode, detail.BuyOrder, detail.AuthorizationCode);*/
+
             return View();
         }
 

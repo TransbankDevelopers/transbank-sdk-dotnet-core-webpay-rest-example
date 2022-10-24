@@ -1,0 +1,79 @@
+﻿@{
+    Html.RenderPartial("~/Views/Shared/navbar-webpayplus.cshtml");
+}
+
+
+    <div class="row">
+        <div class="col">
+            <h2>Confirmar Transacción</h2>
+            En este paso tenemos que confirmar la transacción con el objetivo de avisar a Transbank que hemos recibido la transacción ha sido recibida exitosamente. En caso de que no se confirme la transacción, ésta será reversada.
+        </div>
+    </div><br>
+
+
+
+    <div class="row">
+        <div class="col-6">
+            <h4>Datos recibidos</h4>
+            Luego de que se termina el flujo en el formulario de pago recibiras un POST con lo siguiente
+        </div>
+        <div class="col-6">
+            <pre>
+                <code class="language-java">
+{
+    'token_ws': '@ViewBag.TokenWs'
+}
+                </code>
+            </pre>
+        </div>
+
+    </div><br>
+
+        <div class="row">
+
+            <div class="col-6">
+                <pre>
+                    <code class="language-json">
+    //inicio sección de importación
+    using Transbank.Common;
+    using Transbank.Webpay.Common;
+    using Transbank.Webpay.WebpayPlus;
+    //fin sección de importación
+
+    Transaction tx = new Transaction(new Options(IntegrationCommerceCodes.WEBPAY_PLUS, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+    var response = tx.Commit(token_ws);
+                    </code>
+                </pre>
+            </div>
+            <div class="col-6">
+                <h4>Petición</h4>
+                 Usaras el token recibido para confirmar la transacción usando nuevamente WebpayPlus
+            </div>
+        </div><br>
+
+
+
+    <div class="row">
+        <div class="col-6">
+            <h4>Respuesta</h4>
+            Transbank contestará con lo siguiente. Debes guardar esta información, lo único que debes validar es que response_code sea igual a cero.
+        </div>
+        <div class="col-6">
+            <pre>
+                <code class="language-json">
+@ViewBag.Resp
+                </code>
+            </pre>
+        </div>
+    </div><br>
+
+    <div class="row">
+        <h2>Listo !</h2>
+        Ya puedes mostrar al usuario una página de éxito de la transacción.
+    </div><br>
+@{
+    Html.RenderPartial("~/Views/Shared/status-refund.cshtml");
+}
+
+
+

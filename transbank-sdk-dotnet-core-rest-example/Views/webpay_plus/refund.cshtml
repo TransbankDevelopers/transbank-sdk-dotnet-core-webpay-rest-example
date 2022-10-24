@@ -1,0 +1,48 @@
+﻿@{
+    Html.RenderPartial("~/Views/Shared/navbar-webpayplus.cshtml");
+}
+
+    <div class="row">
+        <div class="col">
+            <h2>Reembolso de Transacción</h2>
+            Puedes solicitar el estado de una transacción hasta 7 días despues de que haya sido realizada. No hay limite de solicitudes de este tipo, sin embargo, una vez pasados los 7 días ya no podrás revisar su estado.
+        </div>
+    </div><br>
+
+    <div class="row">
+        <div class="col-6">
+            <h4>Petición</h4>
+            Necesitas el token de la transacción y el monto que quieres reversar, si anulas el monto total puede ser una Reversa o Anulación dependiendo de ciertas condiciones o una Anulación parcial si el monto es menor al total.
+             No es posible hacer ni Anulaciones ni Anulaciones parciales en tarjetas que no sean de crédito. Tampoco es posible realizar reembolsos de compras en cuotas.
+        </div>
+        <div class="col-6">
+            <pre>
+                <code class="language-java">
+//inicio sección de importación
+using Transbank.Common;
+using Transbank.Webpay.Common;
+using Transbank.Webpay.WebpayPlus;
+//fin sección de importación
+
+Transaction tx = new Transaction(new Options(IntegrationCommerceCodes.WEBPAY_PLUS, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+var response = tx.Refund(token, amount);
+                </code>
+            </pre>
+        </div>
+
+    </div><br>
+
+    <div class="row">
+        <div class="col-6">
+            <pre>
+                <code class="language-json">
+@ViewBag.Resp
+                </code>
+            </pre>
+        </div>
+        <div class="col-6">
+            <h4>Respuesta</h4>
+            Transbank contestará con el resultado de la reversa o anulación.
+        </div>
+    </div><br>
+

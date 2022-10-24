@@ -1,10 +1,11 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Linq;
 using Transbank.Webpay.TransaccionCompleta;
-using Microsoft.AspNetCore.Mvc.Routing;
+using Transbank.Common;
+using Transbank.Webpay.Common;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Transbank.Webpay.WebpayPlus;
 
 namespace transbanksdkdotnetrestexample.Controllers
 {
@@ -88,7 +89,8 @@ namespace transbanksdkdotnetrestexample.Controllers
             var deferredPeriodsIndex = 10;
             var gracePeriods = false;
 
-            var result = (new FullTransaction()).Commit(token, idQueryInstallments, deferredPeriodsIndex, gracePeriods);
+            var tx = new FullTransaction(new Options(IntegrationCommerceCodes.TRANSACCION_COMPLETA_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+            var result = (tx).Commit(token, 0, 0, gracePeriods);
 
             UrlHelper urlHelper = new UrlHelper(_actionContextAccessor.ActionContext);
             var returnUrl = urlHelper.Action("Status", "TransaccionCompleta", null, Request.Scheme);
@@ -100,6 +102,12 @@ namespace transbanksdkdotnetrestexample.Controllers
             ViewBag.Action = returnUrl;
             ViewBag.Token = token;
             ViewBag.Result = result;
+
+            /*
+            var r1 = tx.IncreaseAmount(token, result.BuyOrder, result.AuthorizationCode, 1000);
+            var r2 = tx.IncreaseAuthorizationDate(token, result.BuyOrder, result.AuthorizationCode);
+            var r3 = tx.ReversePreAuthorizedAmount(token, result.BuyOrder, result.AuthorizationCode, 1000);
+            var r4 = tx.DeferredCaptureHistory(token);*/
 
             return View();
         }

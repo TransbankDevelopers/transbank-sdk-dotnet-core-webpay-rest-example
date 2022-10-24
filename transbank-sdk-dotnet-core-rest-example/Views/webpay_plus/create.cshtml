@@ -1,0 +1,125 @@
+﻿@{
+    Html.RenderPartial("~/Views/Shared/navbar-webpayplus.cshtml");
+}
+
+    <div class="row">
+        <div class="col">
+            <h2>Crear Transacción</h2>
+            En este paso crearemos la transacción con el objetivo de obtener un identificador unico y poder en el siguiente paso redirigir al Tarjetahabiente hacia el formulario de pago
+        </div>
+    </div><br>
+
+    <div class="row">
+        <div class="col-6">
+            <h4>Petición</h4>
+            Para comenzar debes importar WebpayPlus y luego crear una transacción
+        </div>
+        <div class="col-6">
+            <pre>
+                <code class="language-java">
+
+//inicio sección de importación
+using Transbank.Common;
+using Transbank.Webpay.Common;
+using Transbank.Webpay.WebpayPlus;
+//fin sección de importación
+
+Transaction tx = new Transaction(new Options(IntegrationCommerceCodes.WEBPAY_PLUS, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+
+var buyOrder = "buyOrder_" + GetRandomNumber();
+var sessionId = "sessionId_" + GetRandomNumber();
+var amount = 1000;
+var returnUrl = CreateUrl(ctrlName, "commit"); 
+
+var response = tx.Create(buyOrder, sessionId, amount, returnUrl);
+
+                </code>
+            </pre>
+        </div>
+    </div><br>
+
+
+    <div class="row">
+        <div class="col-6">
+            <pre>
+                <code class="language-json">
+@ViewBag.Resp
+                </code>
+            </pre>
+        </div>
+        <div class="col-6">
+            <h4>Respuesta</h4>
+            Una vez creada la transacción, estos serán los datos de respuesta
+        </div>
+    </div><br>
+
+
+    <div class="row">
+        <div class="col-6">
+            <h4>Por último</h4>
+            Debes utilizar estos datos para crear un formulario
+        </div>
+        <div class="col-6">
+            <pre>
+                <code class="language-html">
+&lt;form action="@ViewBag.Token" method="POST">
+   &lt;input type="hidden" name="token_ws" value="@ViewBag.Token"/>
+   &lt;input type="submit" value="Pagar"/>
+&lt;/form>
+                </code>
+            </pre>
+        </div>
+    </div><br>
+
+
+    <br>
+    <div class="row">
+        <h2>Ejemplo</h2>
+    </div>
+
+    <div class="row">
+        <div class="col-6">
+            <h4>Creamos la transacción</h4>
+            Usando los siguientes datos
+            <table class="table table-bordered">
+                <tr>
+                    <th>Campo</th>
+                    <th>Valor</th>
+                </tr>
+                <tr>
+                    <td>Orden de compra (buyOrder)</td>
+                    <td>@ViewBag.BuyOrder</td>
+                </tr>
+                <tr>
+                    <td>ID de sesión (sessionid)</td>
+                    <td>@ViewBag.SessionId</td>
+                </tr>
+                <tr>
+                    <td>Monto (amount)</td>
+                    <td>@ViewBag.Amount</td>
+                </tr>
+                <tr>
+                    <td>URL de retorno (returnUrl)</td>
+                    <td>@ViewBag.ReturnUrl</td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-6">
+            <h4>Por último</h4>
+            Con la respuesta del servicio creamos el formulario, para efectos del ejemplo haremos el campo token_ws visible
+            <div class="card">
+              <div class="card-body">
+                <h6 class="card-title">Formulario de redirección</h6>
+                <form action="@ViewBag.Url" method="POST">
+                  <div class="mb-3">
+                    <label for="token_ws" class="form-label">token_ws</label>
+                    <input type="text" class="form-control" name="token_ws" value="@ViewBag.Token">
+                  </div>
+                  <button type="submit" class="btn btn-primary">PAGAR</button>
+                </form>
+              </div>
+            </div>
+
+        </div>
+    </div><br>
+
