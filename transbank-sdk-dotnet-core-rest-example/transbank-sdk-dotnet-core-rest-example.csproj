@@ -9,11 +9,16 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.11.1" />
-    <PackageReference Include="TransbankSDK" Version="4.0.0" />
+    <PackageReference Include="TransbankSDK" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Pages\" />
+    <Folder Include="Views\webpay_plus\" />
+	<Folder Include="Views\webpay_plus_deferred\" />
+	<Folder Include="Views\oneclick_mall\" />
+	<Folder Include="Views\transaccion_completa\" />
+	<Folder Include="Views\transaccion_completa_deferred\" />
   </ItemGroup>
 
 </Project>

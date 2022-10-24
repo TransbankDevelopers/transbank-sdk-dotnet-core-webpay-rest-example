@@ -1,68 +1,25 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="es">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - WebApplication1</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="~/css/site.css" />
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/default.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <title>Transbank SDK .Net</title>
 </head>
-<body  class="container" >
 
+<body class="container">
 
-    <form name="globalForm" method="post" action="@ViewBag.Action">
-        <input type="hidden" name="token_ws" id="token_ws" value="@ViewBag.Token" />
-    </form>
     @RenderBody()
 
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-
-
-    <script>
-        document.globalForm.addEventListener("submit", function () {
-            window.localStorage.setItem(document.getElementById("token_ws").value);
-        });
-        function sendToken() {
-            document.getElementById("token_ws").value = document.getElementById("token_input").value;
-            window.localStorage.setItem("savedToken", document.getElementById("token_input").value);
-            document.globalForm.submit();
-        }
-        function appendToGlobalFormAndSend(idsArray) {
-            idsArray.forEach(function (id) {
-                var input = document.getElementById(id);
-                var value = input.value;
-                input.setAttribute('id', `${id}_copied`);
-                document.globalForm.innerHTML = document.globalForm.innerHTML +
-                    `<input type="hidden" name="${id}" value="${value}">`;
-            });
-            sendToken();
-        }
-    </script>
-    @if (!String.IsNullOrEmpty(ViewBag.SaveToken))
-    {
-    <script>window.localStorage.setItem("savedToken", "@ViewBag.SaveToken");</script>
+    @{
+        Html.RenderPartial("~/Views/Shared/footer.cshtml");
     }
-    @if (ViewBag.SaveAmount != null)
-    {
-    <script>window.localStorage.setItem("savedAmount", "@ViewBag.SaveAmount.ToString()");</script>
-    }
-    @if (!String.IsNullOrEmpty(ViewBag.SaveAuthorizationCode))
-    {
-    <script>window.localStorage.setItem("savedAuthorizationCode", "@ViewBag.SaveAuthorizationCode");</script>
-    }
-    @if (!String.IsNullOrEmpty(ViewBag.SaveCommerceCode))
-    {
-    <script>window.localStorage.setItem("savedCommerceCode", "@ViewBag.SaveCommerceCode");</script>
-    }
-    @if (!String.IsNullOrEmpty(ViewBag.SaveBuyOrder))
-    {
-    <script>window.localStorage.setItem("savedBuyOrder", "@ViewBag.SaveBuyOrder");</script>
-    }
-
-    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

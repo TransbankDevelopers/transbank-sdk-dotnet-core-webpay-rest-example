@@ -4,8 +4,12 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Newtonsoft.Json.Linq;
 using Transbank.Common;
 using Transbank.Webpay.Common;
+using Transbank.Webpay.TransaccionCompleta;
+using Transbank.Webpay.TransaccionCompletaMall;
+using Transbank.Webpay.TransaccionCompletaMall.Common;
 using Transbank.Webpay.WebpayPlus;
 
 namespace transbanksdkdotnetrestexample.Controllers
@@ -41,6 +45,9 @@ namespace transbanksdkdotnetrestexample.Controllers
             ViewBag.Result = result;
             ViewBag.Action = result.Url;
             ViewBag.Token = result.Token;
+
+
+            Prueba2();
             return View();
         }
 
@@ -140,6 +147,20 @@ namespace transbanksdkdotnetrestexample.Controllers
             ViewBag.SaveToken = token_ws;
             ViewBag.SaveAmount = result.Amount.ToString();
             ViewBag.SaveAuthorizationCode = result.AuthorizationCode;
+            /*
+            var r1 = tx.IncreaseAmount(token_ws, result.BuyOrder, result.AuthorizationCode, 1000);
+            var r2 = tx.IncreaseAuthorizationDate(token_ws, result.BuyOrder, result.AuthorizationCode);
+            var r3 = tx.ReversePreAuthorizedAmount(token_ws, result.BuyOrder, result.AuthorizationCode, 1000);
+            var r4 = tx.DeferredCaptureHistory(token_ws);*/
+            /*
+            IncreaseAmountResponse r1 = tx.increaseAmount(tokenWs, resp.getBuyOrder(), resp.getAuthorizationCode(), 1000);
+            log.info(toJson(r1));
+            ReversePreAuthorizedAmountResponse r2 = tx.reversePreAuthorizedAmount(tokenWs, resp.getBuyOrder(), resp.getAuthorizationCode(), 1000);
+            log.info(toJson(r2));
+            IncreaseAuthorizationDateResponse r3 = tx.increaseAuthorizationDate(tokenWs, resp.getBuyOrder(), resp.getAuthorizationCode());
+            log.info(toJson(r3));
+            List<DeferredCaptureHistoryResponse> r4 = tx.deferredCaptureHistory(tokenWs);
+            log.info(toJson(r4));*/
 
             return View();
         }
@@ -352,7 +373,8 @@ namespace transbanksdkdotnetrestexample.Controllers
         
         public ActionResult MallDeferredCommit(String token_ws)
         {
-            var result = (new MallTransaction()).Commit(token_ws);
+            var tx = new MallTransaction(new Options(IntegrationCommerceCodes.WEBPAY_PLUS_MALL_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+            var result = tx.Commit(token_ws);
 
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
@@ -367,6 +389,14 @@ namespace transbanksdkdotnetrestexample.Controllers
             ViewBag.SaveAuthorizationCode = result.Details.First().AuthorizationCode;
 
             ViewBag.Success = result.Details.All(detail => detail.ResponseCode == 0);
+            /*
+            var detail = result.Details[0];
+            var r1 = tx.IncreaseAmount(token_ws, detail.CommerceCode, detail.BuyOrder, detail.AuthorizationCode, 1000);
+            var r2 = tx.IncreaseAuthorizationDate(token_ws, detail.CommerceCode, detail.BuyOrder, detail.AuthorizationCode);
+            var r3 = tx.ReversePreAuthorizedAmount(token_ws, detail.CommerceCode, detail.BuyOrder, detail.AuthorizationCode, 1000);
+            var r4 = tx.DeferredCaptureHistory(token_ws, detail.CommerceCode, detail.BuyOrder);*/
+
+
             return View();
         }
         
@@ -428,6 +458,77 @@ namespace transbanksdkdotnetrestexample.Controllers
             ViewBag.SaveToke = token;
 
             return View();
+        }
+
+
+        private void Prueba()
+        {
+            var random = new Random();
+
+            var buy_order = random.Next(999999999).ToString();
+            var session_id = random.Next(9999999).ToString();
+            var amount = 10000;
+            var cvv = 123;
+            var card_number = "4051885600446623";
+            var card_expiration_date = "22/10";
+
+            var tx = new FullTransaction(new Options(IntegrationCommerceCodes.TRANSACCION_COMPLETA_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+
+            var result = tx.Create(
+                buyOrder: buy_order,
+                sessionId: session_id,
+                amount: amount,
+                cvv: cvv,
+                cardNumber: card_number,
+                cardExpirationDate: card_expiration_date);
+            /*
+            var result2 = tx.Commit(result.Token, null, null, false);
+
+            var r1 = tx.IncreaseAmount(result.Token, result2.BuyOrder, result2.AuthorizationCode, 1000);
+            var r2 = tx.IncreaseAuthorizationDate(result.Token, result2.BuyOrder, result2.AuthorizationCode);
+            var r3 = tx.ReversePreAuthorizedAmount(result.Token, result2.BuyOrder, result2.AuthorizationCode, 1000);
+            var r4 = tx.DeferredCaptureHistory(result.Token);*/
+
+
+
+            var random2 = new Random();
+        }
+
+        private void Prueba2()
+        {
+            var random = new Random();
+
+            var buy_order = random.Next(999999999).ToString();
+            var session_id = random.Next(9999999).ToString();
+            var amount = 10000;
+            var card_number = "4051885600446623";
+            var card_expiration_date = "22/10";
+
+            var tx = new MallFullTransaction(new Options(IntegrationCommerceCodes.TRANSACCION_COMPLETA_MALL_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+
+            var details = new List<CreateDetails>();
+            details.Add(new CreateDetails(amount, IntegrationCommerceCodes.TRANSACCION_COMPLETA_MALL_DEFERRED_CHILD1, buy_order + "_1"));
+
+            var result = tx.Create(
+                buyOrder: buy_order,
+                sessionId: session_id,
+                cardNumber: card_number,
+                cardExpirationDate: card_expiration_date,
+                details,
+                123
+            );
+
+            var details2 = new List<MallCommitDetails>();
+            details2.Add(new MallCommitDetails(IntegrationCommerceCodes.TRANSACCION_COMPLETA_MALL_DEFERRED_CHILD1, buy_order + "_1", 0, 0, false));
+            var result2 = tx.Commit(result.Token, details2);
+            /*
+            var detail = result2.Details[0];
+            var r1 = tx.IncreaseAmount(result.Token, detail.CommerceCode, detail.BuyOrder, detail.AuthorizationCode, 1000);
+            var r2 = tx.IncreaseAuthorizationDate(result.Token, detail.CommerceCode, detail.BuyOrder, detail.AuthorizationCode);
+            var r3 = tx.ReversePreAuthorizedAmount(result.Token, detail.CommerceCode, detail.BuyOrder, detail.AuthorizationCode, 1000);
+            var r4 = tx.DeferredCaptureHistory(result.Token, detail.CommerceCode, detail.BuyOrder);*/
+
+            var random2 = new Random();
         }
     }
 }
