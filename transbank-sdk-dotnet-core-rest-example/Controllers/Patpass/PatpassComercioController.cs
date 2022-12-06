@@ -16,7 +16,7 @@ namespace Controllers.Patpass
         public PatpassComercioController(IUrlHelperFactory urlHelperFactory, IActionContextAccessor actionContextAccessor) :
             base(urlHelperFactory, actionContextAccessor)
         {
-            inscription = new Inscription(new Options(IntegrationCommerceCodes.PATPASS_COMERCIO, IntegrationApiKeys.PATPASS_COMERCIO, PatpassComercioIntegrationType.Test));
+            inscription = new Inscription(new Options(IntegrationCommerceCodes.PATPASS_COMERCIO, IntegrationApiKeys.PATPASS_COMERCIO, PatpassComercioIntegrationType.Live));
         }
 
         [Route("start")]
