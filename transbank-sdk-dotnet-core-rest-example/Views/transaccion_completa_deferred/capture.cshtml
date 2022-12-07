@@ -22,19 +22,17 @@
         </div>
         <div class="col-6">
             <pre>
-                <code class="language-json">
-    //inicio sección de importación
-    import cl.transbank.common.IntegrationApiKeys;
-    import cl.transbank.common.IntegrationCommerceCodes;
-    import cl.transbank.common.IntegrationType;
-    import cl.transbank.webpay.common.WebpayOptions;
-    import cl.transbank.webpay.transaccioncompleta.FullTransaction;
-    import cl.transbank.webpay.transaccioncompleta.responses.*;
-    //fin sección de importación
+                <code class="language-csharp">
+                    //inicio sección de importación
+                    using Transbank.Common;
+                    using Transbank.Webpay.Common;
+                    using Transbank.Webpay.TransaccionCompleta;
+                    //fin sección de importación
 
-    FullTransaction tx = new FullTransaction(new WebpayOptions(IntegrationCommerceCodes.TRANSACCION_COMPLETA_DEFERRED, IntegrationApiKeys.WEBPAY, IntegrationType.TEST));
-    FullTransactionCaptureResponse response = tx.capture(tokenWs, buyOrder, authorizationCode, amount);
-                    </code>
+                    tx = new FullTransaction(new Options(IntegrationCommerceCodes.TRANSACCION_COMPLETA_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+
+                    var response = tx.Capture(token_ws, buy_order, authorization_code, amount);
+                </code>
             </pre>
         </div>
 

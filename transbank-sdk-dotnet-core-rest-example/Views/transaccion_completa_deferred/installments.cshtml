@@ -20,18 +20,17 @@
             </div>
             <div class="col-6">
                 <pre>
-                    <code class="language-json">
-    //inicio sección de importación
-    import cl.transbank.common.IntegrationApiKeys;
-    import cl.transbank.common.IntegrationCommerceCodes;
-    import cl.transbank.common.IntegrationType;
-    import cl.transbank.webpay.common.WebpayOptions;
-    import cl.transbank.webpay.transaccioncompleta.FullTransaction;
-    import cl.transbank.webpay.transaccioncompleta.responses.*;
-    //fin sección de importación
+                    <code class="language-csharp">
+                        //inicio sección de importación
+                        using Transbank.Common;
+                        using Transbank.Webpay.Common;
+                        using Transbank.Webpay.TransaccionCompleta;
+                        //fin sección de importación
 
-    FullTransaction tx = new FullTransaction(new WebpayOptions(IntegrationCommerceCodes.TRANSACCION_COMPLETA, IntegrationApiKeys.WEBPAY, IntegrationType.TEST));
-    FullTransactionInstallmentResponse response = tx.installments(token, installments);
+                        tx = new FullTransaction(new Options(IntegrationCommerceCodes.TRANSACCION_COMPLETA_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+
+                        var response = tx.Installments(token, installments);
+
                     </code>
                 </pre>
             </div>
@@ -74,10 +73,10 @@
             <div class="card">
               <div class="card-body">
                 <h6 class="card-title">Formulario confirmación con cuotas</h6>
-                <form action="@ViewBag.commit-endpoint")}" method="POST">
+                <form action="@ViewBag.CommitEndpoint" method="POST">
                   <div class="mb-3">
                       <label for="token" class="form-label">Token</label>
-                      <input type="text" class="form-control" id="token" name="token" value="@ViewBag.Token">
+                      <input type="text" class="form-control" id="token" name="token" value="@ViewBag.TokenWs">
                   </div>
                   <div class="mb-3">
                     <label for="id_query_installments" class="form-label">ID de consulta de cuotas (Opcional)</label>

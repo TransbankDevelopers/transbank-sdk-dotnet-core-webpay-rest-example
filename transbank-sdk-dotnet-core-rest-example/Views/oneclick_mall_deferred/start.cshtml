@@ -21,25 +21,20 @@
         <div class="col-6">
             <pre>
                 <code class="language-java">
+                    //inicio sección de importación
+                    using Transbank.Common;
+                    using Transbank.Webpay.Common;
+                    using Transbank.Webpay.Oneclick;
+                    //fin sección de importación
 
-//inicio sección de importación
-import cl.transbank.common.IntegrationApiKeys;
-import cl.transbank.common.IntegrationCommerceCodes;
-import cl.transbank.common.IntegrationType;
-import cl.transbank.webpay.common.WebpayOptions;
-import cl.transbank.webpay.oneclick.Oneclick;
-import cl.transbank.webpay.oneclick.model.*;
-import cl.transbank.webpay.oneclick.responses.*;
-//fin sección de importación
+                    ins = new MallInscription(new Options(IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
 
-Oneclick.MallInscription inscription = new Oneclick.MallTransaction(new WebpayOptions(IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED, IntegrationApiKeys.WEBPAY, IntegrationType.TEST));
+                    var username = "User-" + GetRandomNumber();
+                    HttpContext.Session.SetString("username", username);
 
-String username = "User-" + getRandomNumber();
-String email = "user." + getRandomNumber() + "&#64;example.cl";
-String returnUrl = request.getRequestURL().toString().replace("start","finish");
-
-OneclickMallInscriptionStartResponse response = inscription.start(username, email, returnUrl);
-
+                    var email = "user." + GetRandomNumber() + "&#64;example.cl";
+                    var returnUrl = CreateUrl(ctrlName, "finish");
+                    var response = ins.Start(username, email, returnUrl);
                 </code>
             </pre>
         </div>
@@ -95,11 +90,11 @@ OneclickMallInscriptionStartResponse response = inscription.start(username, emai
                 </tr>
                 <tr>
                     <td>Nombre de Usuario (userName)</td>
-                    <td>@ViewBag.username")}</td>
+                    <td>@ViewBag.username</td>
                 </tr>
                 <tr>
                     <td>Email</td>
-                    <td>@ViewBag.email")}</td>
+                    <td>@ViewBag.email</td>
                 </tr>
                 <tr>
                     <td>URL de respuesta (responseUrl)</td>

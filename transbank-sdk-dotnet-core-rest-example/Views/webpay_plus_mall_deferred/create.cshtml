@@ -20,33 +20,41 @@
         </div>
         <div class="col-6">
             <pre>
-                <code class="language-java">
+                <code class="language-csharp">
+                    //inicio sección de importación
+                    using Transbank.Common;
+                    using Transbank.Webpay.Common;
+                    using Transbank.Webpay.WebpayPlus;
+                    //fin sección de importación
 
-//inicio sección de importación
-import cl.transbank.common.IntegrationApiKeys;
-import cl.transbank.common.IntegrationCommerceCodes;
-import cl.transbank.common.IntegrationType;
-import cl.transbank.model.MallTransactionCreateDetails;
-import cl.transbank.webpay.common.WebpayOptions;
-import cl.transbank.webpay.webpayplus.responses.*;
-import cl.transbank.webpay.webpayplus.WebpayPlus;
-//fin sección de importación
+                    tx = new MallTransaction(new Options(IntegrationCommerceCodes.WEBPAY_PLUS_MALL_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
 
-WebpayPlus.MallTransaction tx = new WebpayPlus.MallTransaction(new WebpayOptions(IntegrationCommerceCodes.WEBPAY_PLUS_MALL_DEFERRED, IntegrationApiKeys.WEBPAY, IntegrationType.TEST));
+                    var buyOrder = "buyOrder_" + GetRandomNumber();
+                    var sessionId = "sessionId_" + GetRandomNumber();
+                    var returnUrl = CreateUrl(ctrlName, "commit");
 
-String buyOrder = "buyOrder_" + getRandomNumber();
-String buyOrderMallOne = "childBuyOrder_" + getRandomNumber();
-String buyOrderMallTwo = "childBuyOrder_" + getRandomNumber();
-String sessionId = "sessionId_" + getRandomNumber();
-double amountMallOne = 1000;
-double amountMallTwo = 1000;
-String returnUrl = request.getRequestURL().toString().replace("create","commit");
+                    var childCommerceCode1 = IntegrationCommerceCodes.WEBPAY_PLUS_MALL_DEFERRED_CHILD1;
+                    var childBuyOrder1 = "childBuyOrder_" + GetRandomNumber();
+                    decimal amount1 = 1000;
 
-String mallOneCommerceCode = IntegrationCommerceCodes.WEBPAY_PLUS_MALL_DEFERRED_CHILD1;
-String mallTwoCommerceCode = IntegrationCommerceCodes.WEBPAY_PLUS_MALL_DEFERRED_CHILD2;
-final MallTransactionCreateDetails mallDetails = MallTransactionCreateDetails.build()
-        .add(amountMallOne, mallOneCommerceCode, buyOrderMallOne)
-        .add(amountMallTwo, mallTwoCommerceCode, buyOrderMallTwo);
+                    var childCommerceCode2 = IntegrationCommerceCodes.WEBPAY_PLUS_MALL_DEFERRED_CHILD2;
+                    var childBuyOrder2 = "childBuyOrder_" + GetRandomNumber();
+                    decimal amount2 = 1000;
+
+                    var details = new List<TransactionDetail>
+                        ();
+                        details.Add(new TransactionDetail(
+                        amount1,
+                        childCommerceCode1,
+                        childBuyOrder1
+                        ));
+                        details.Add(new TransactionDetail(
+                        amount2,
+                        childCommerceCode2,
+                        childBuyOrder2
+                        ));
+
+                    var response = tx.Create(buyOrder, sessionId, returnUrl, details);
 
                 </code>
             </pre>

@@ -20,26 +20,20 @@
         </div>
         <div class="col-6">
             <pre>
-                <code class="language-java">
+                <code class="language-csharp">
+                    //inicio sección de importación
+                    using Transbank.Common;
+                    using Transbank.Webpay.Common;
+                    using Transbank.Webpay.TransaccionCompleta;
+                    //fin sección de importación
 
-//inicio sección de importación
-import cl.transbank.common.IntegrationApiKeys;
-import cl.transbank.common.IntegrationCommerceCodes;
-import cl.transbank.common.IntegrationType;
-import cl.transbank.webpay.common.WebpayOptions;
-import cl.transbank.webpay.transaccioncompleta.FullTransaction;
-import cl.transbank.webpay.transaccioncompleta.responses.*;
-//fin sección de importación
+                    tx = new FullTransaction(new Options(IntegrationCommerceCodes.TRANSACCION_COMPLETA_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
 
-FullTransaction tx = new FullTransaction(new WebpayOptions(IntegrationCommerceCodes.TRANSACCION_COMPLETA_DEFERRED, IntegrationApiKeys.WEBPAY, IntegrationType.TEST));
-
-String buyOrder = "buyOrder_" + getRandomNumber();
-String sessionId = "sessionId_" + getRandomNumber();
-String cardExpirationDate= year + "/" + month;
-double amount = 1000;
-
-FullTransactionCreateResponse response = tx.create(buyOrder, sessionId, amount, (short)cvv, cardNumber, cardExpirationDate);
-
+                    var buyOrder = "buyOrder_" + GetRandomNumber();
+                    var sessionId = "sessionId_" + GetRandomNumber();
+                    var returnUrl = CreateUrl(ctrlName, "commit");
+                    var cardExpirationDate = year + "/" + month;
+                    var response = tx.Create(buyOrder, sessionId, amount, cvv, card_number, cardExpirationDate);
                 </code>
             </pre>
         </div>
@@ -66,7 +60,7 @@ FullTransactionCreateResponse response = tx.create(buyOrder, sessionId, amount, 
 
     <div class="row">
         <div class="col-6">
-            <form action="@ViewBag.commit-endpoint")}" method="POST">
+            <form action="@ViewBag.commitEndpoint")}" method="POST">
               <input type="hidden" name="token" value="@ViewBag.Token">
               <button type="submit" class="btn btn-primary">CONFIRMAR SIN CUOTAS</button>
             </form>

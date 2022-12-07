@@ -20,19 +20,17 @@
         </div>
         <div class="col-6">
             <pre>
-                <code class="language-java">
-//inicio sección de importación
-import cl.transbank.common.IntegrationApiKeys;
-import cl.transbank.common.IntegrationCommerceCodes;
-import cl.transbank.common.IntegrationType;
-import cl.transbank.model.MallTransactionCreateDetails;
-import cl.transbank.webpay.common.WebpayOptions;
-import cl.transbank.webpay.webpayplus.responses.*;
-import cl.transbank.webpay.webpayplus.WebpayPlus;
-//fin sección de importación
+                <code class="language-csharp">
+                    //inicio sección de importación
+                    using Transbank.Common;
+                    using Transbank.Webpay.Common;
+                    using Transbank.Webpay.WebpayPlus;
+                    //fin sección de importación
 
-WebpayPlus.MallTransaction tx = new WebpayPlus.MallTransaction(new WebpayOptions(IntegrationCommerceCodes.WEBPAY_PLUS_MALL_DEFERRED, IntegrationApiKeys.WEBPAY, IntegrationType.TEST));
-WebpayPlusMallTransactionStatusResponse response = tx.status(token);
+                    tx = new MallTransaction(new Options(IntegrationCommerceCodes.WEBPAY_PLUS_MALL_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+
+                    var token = Request.Form["token_ws"];
+                    var response = tx.Status(token);
                 </code>
             </pre>
         </div>

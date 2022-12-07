@@ -29,6 +29,7 @@ namespace transbank_sdk_dotnet_core_rest_example
             services
             .AddSingleton<IActionContextAccessor, ActionContextAccessor>()
             .AddMvc();
+            services.AddSession();
 
             services.Configure<WebEncoderOptions>(options =>
             {
@@ -41,6 +42,7 @@ namespace transbank_sdk_dotnet_core_rest_example
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseSession();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

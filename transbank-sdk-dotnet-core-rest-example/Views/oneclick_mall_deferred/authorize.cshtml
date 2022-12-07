@@ -20,34 +20,31 @@
         </div>
         <div class="col-6">
             <pre>
-                <code class="language-java">
+                <code class="language-csharp">
+                    //inicio sección de importación
+                    using Transbank.Common;
+                    using Transbank.Webpay.Common;
+                    using Transbank.Webpay.Oneclick;
+                    //fin sección de importación
 
-//inicio sección de importación
-import cl.transbank.common.IntegrationApiKeys;
-import cl.transbank.common.IntegrationCommerceCodes;
-import cl.transbank.common.IntegrationType;
-import cl.transbank.webpay.common.WebpayOptions;
-import cl.transbank.webpay.oneclick.Oneclick;
-import cl.transbank.webpay.oneclick.model.*;
-import cl.transbank.webpay.oneclick.responses.*;
-//fin sección de importación
-Oneclick.MallTransaction tx = new Oneclick.MallTransaction(new WebpayOptions(IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED, IntegrationApiKeys.WEBPAY, IntegrationType.TEST));
+                    tx = new MallTransaction(new Options(IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
 
+                    var buyOrder = "buyOrder_" + GetRandomNumber();
+                    var buyOrderMallOne = "childBuyOrder1_" + GetRandomNumber();
+                    var buyOrderMallTwo = "childBuyOrder2_" + GetRandomNumber();
+                    var childCommerceCode1 = IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED_CHILD1;
+                    var childCommerceCode2 = IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED_CHILD2;
 
-double childAmount1 = 1000;
-double childAmount2 = 1000;
-String buyOrder = "buyOrder_" + getRandomNumber();
-String buyOrderMallOne = "childBuyOrder1_" + getRandomNumber();
-String buyOrderMallTwo = "childBuyOrder2_" + getRandomNumber();
-String childCommerceCode1 = IntegrationCommerceCodes.ONECLICK_MALL_CHILD1;
-String childCommerceCode2 = IntegrationCommerceCodes.ONECLICK_MALL_CHILD2;
+                    List<PaymentRequest>
+                    details = new List<PaymentRequest>();
+                    details.Add(new PaymentRequest(
+                        childCommerceCode1, buyOrderMallOne, amount1, installments1
+                    ));
+                    details.Add(new PaymentRequest(
+                        childCommerceCode2, buyOrderMallTwo, amount2, installments2
+                    ));
 
-MallTransactionCreateDetails mallDetails = MallTransactionCreateDetails.build()
-        .add(childAmount1, childCommerceCode1, buyOrderMallOne, (byte) 1)
-        .add(childAmount2, childCommerceCode2, buyOrderMallTwo, (byte) 1);
-
-OneclickMallTransactionAuthorizeResponse response = tx.authorize(username, tbkUser, buyOrder, mallDetails);
-
+                    var response = tx.Authorize(username, tbk_user, buyOrder, details);
                 </code>
             </pre>
         </div>

@@ -20,24 +20,34 @@
         </div>
         <div class="col-6">
             <pre>
-                <code class="language-java">
+                <code class="language-csharp">
+                    //inicio sección de importación
+                    using Transbank.Common;
+                    using Transbank.Webpay.Common;
+                    using Transbank.Webpay.TransaccionCompletaMall;
+                    using Transbank.Webpay.TransaccionCompletaMall.Common;
+                    //fin sección de importación
 
-//inicio sección de importación
-import cl.transbank.common.IntegrationApiKeys;
-import cl.transbank.common.IntegrationCommerceCodes;
-import cl.transbank.common.IntegrationType;
-import cl.transbank.model.MallTransactionCreateDetails;
-import cl.transbank.webpay.common.WebpayOptions;
-import cl.transbank.webpay.transaccioncompleta.MallFullTransaction;
-import cl.transbank.webpay.transaccioncompleta.model.MallTransactionCommitDetails;
-import cl.transbank.webpay.transaccioncompleta.responses.*;
-//fin sección de importación
+                    tx = new MallFullTransaction(new Options(IntegrationCommerceCodes.TRANSACCION_COMPLETA_MALL_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
 
-MallFullTransaction tx = new MallFullTransaction(new WebpayOptions(IntegrationCommerceCodes.TRANSACCION_COMPLETA_MALL_DEFERRED, IntegrationApiKeys.WEBPAY, IntegrationType.TEST));
+                    var buyOrder = "buyOrder_" + GetRandomNumber();
+                    var sessionId = "sessionId_" + GetRandomNumber();
+                    var returnUrl = CreateUrl(ctrlName, "commit");
+                    var cardExpirationDate = year + "/" + month;
 
-MallFullTransactionCreateResponse response = tx.create(buyOrder, sessionId, cardNumber, cardExpirationDate, MallTransactionCreateDetails.build()
-                    .add(amount, childCommerceCode, childBuyOrder), (short) cvv);
+                    var childCommerceCode = IntegrationCommerceCodes.TRANSACCION_COMPLETA_MALL_DEFERRED_CHILD1;
+                    var childBuyOrder = "childBuyOrder_" + GetRandomNumber();
+                    decimal amount1 = 1000;
 
+                    var details = new List<CreateDetails>
+                        ();
+                        details.Add(new CreateDetails(
+                        amount1,
+                        childCommerceCode,
+                        childBuyOrder
+                        ));
+
+                        var response = tx.Create(buyOrder, sessionId, card_number, cardExpirationDate, details, cvv);
                 </code>
             </pre>
         </div>
@@ -67,7 +77,7 @@ MallFullTransactionCreateResponse response = tx.create(buyOrder, sessionId, card
             <div class="card">
               <div class="card-body">
                 <h6 class="card-title">Formulario confirmación sin cuotas</h6>
-                <form action="@ViewBag.commit-endpoint")}" method="POST">
+                <form action="@ViewBag.commitEndpoint" method="POST">
                   <input type="hidden" name="token" value="@ViewBag.Token">
                   <div class="mb-3">
                     <label for="child_commerce_code" class="form-label">Código de tienda hija</label>
