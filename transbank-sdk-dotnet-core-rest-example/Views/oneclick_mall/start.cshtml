@@ -20,26 +20,20 @@
         </div>
         <div class="col-6">
             <pre>
-                <code class="language-java">
+                <code class="language-csharp">
+                    //inicio sección de importación
+                    using Transbank.Common;
+                    using Transbank.Webpay.Common;
+                    using Transbank.Webpay.Oneclick;
+                    //fin sección de importación
 
-//inicio sección de importación
-import cl.transbank.common.IntegrationApiKeys;
-import cl.transbank.common.IntegrationCommerceCodes;
-import cl.transbank.common.IntegrationType;
-import cl.transbank.webpay.common.WebpayOptions;
-import cl.transbank.webpay.oneclick.Oneclick;
-import cl.transbank.webpay.oneclick.model.*;
-import cl.transbank.webpay.oneclick.responses.*;
-//fin sección de importación
+                    var ins = new MallInscription(new Options(IntegrationCommerceCodes.ONECLICK_MALL, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+                    var response = ins.Finish(token);
 
-Oneclick.MallInscription inscription = new Oneclick.MallTransaction(new WebpayOptions(IntegrationCommerceCodes.ONECLICK_MALL, IntegrationApiKeys.WEBPAY, IntegrationType.TEST));
-
-String username = "User-" + getRandomNumber();
-String email = "user." + getRandomNumber() + "&#64;example.cl";
-String returnUrl = request.getRequestURL().toString().replace("start","finish");
-
-OneclickMallInscriptionStartResponse response = inscription.start(username, email, returnUrl);
-
+                    var username = "User-" + GetRandomNumber();
+                    var email = "user." + GetRandomNumber() + "&#64;example.cl";
+                    var returnUrl = CreateUrl(ctrlName, "finish");
+                    var response = inscription.Start(username, email, returnUrl);
                 </code>
             </pre>
         </div>
@@ -95,11 +89,11 @@ OneclickMallInscriptionStartResponse response = inscription.start(username, emai
                 </tr>
                 <tr>
                     <td>Nombre de Usuario (userName)</td>
-                    <td>@ViewBag.username")}</td>
+                    <td>@ViewBag.Username</td>
                 </tr>
                 <tr>
                     <td>Email</td>
-                    <td>@ViewBag.email")}</td>
+                    <td>@ViewBag.Email</td>
                 </tr>
                 <tr>
                     <td>URL de respuesta (responseUrl)</td>
@@ -128,6 +122,6 @@ OneclickMallInscriptionStartResponse response = inscription.start(username, emai
 
     
     <script>
-        window.localStorage.setItem('username', '@ViewBag.username")}');
+        window.localStorage.setItem('username', '@ViewBag.Username');
     </script>
 

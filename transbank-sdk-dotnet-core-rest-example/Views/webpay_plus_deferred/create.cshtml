@@ -16,23 +16,20 @@
         <pre>
             <code class="language-java">
 
-//inicio sección de importación
-import cl.transbank.common.IntegrationApiKeys;
-import cl.transbank.common.IntegrationCommerceCodes;
-import cl.transbank.common.IntegrationType;
-import cl.transbank.webpay.common.WebpayOptions;
-import cl.transbank.webpay.webpayplus.WebpayPlus;
-import cl.transbank.webpay.webpayplus.responses.*;
-//fin sección de importación
+                //inicio sección de importación
+                using Transbank.Common;
+                using Transbank.Webpay.Common;
+                using Transbank.Webpay.WebpayPlus;
+                //fin sección de importación
 
-WebpayPlus.Transaction tx = new WebpayPlus.Transaction(new WebpayOptions(IntegrationCommerceCodes.WEBPAY_PLUS_DEFERRED, IntegrationApiKeys.WEBPAY, IntegrationType.TEST));
+                tx = new Transaction(new Options(IntegrationCommerceCodes.WEBPAY_PLUS_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
 
-String buyOrder = "buyOrder_" + String.valueOf(new Random().nextInt(Integer.MAX_VALUE));
-String sessionId = "sessionId_" + String.valueOf(new Random().nextInt(Integer.MAX_VALUE));
-double amount = 1000;
-String returnUrl = request.getRequestURL().toString().replace("create","commit");
+                var buyOrder = "buyOrder_" + GetRandomNumber();
+                var sessionId = "sessionId_" + GetRandomNumber();
+                var amount = 1000;
+                var returnUrl = CreateUrl(ctrlName, "commit");
 
-WebpayPlusTransactionCreateResponse response = tx.create(buyOrder, sessionId, amount, returnUrl);
+                var response = tx.Create(buyOrder, sessionId, amount, returnUrl);
 
             </code>
         </pre>

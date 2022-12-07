@@ -36,18 +36,16 @@
 
             <div class="col-6">
                 <pre>
-                    <code class="language-json">
-    //inicio sección de importación
-    import cl.transbank.common.IntegrationApiKeys;
-    import cl.transbank.common.IntegrationCommerceCodes;
-    import cl.transbank.common.IntegrationType;
-    import cl.transbank.webpay.common.WebpayOptions;
-    import cl.transbank.webpay.webpayplus.WebpayPlus;
-    import cl.transbank.webpay.webpayplus.responses.*;
-    //fin sección de importación
+                    <code class="language-csharp">
+                        //inicio sección de importación
+                        using Transbank.Common;
+                        using Transbank.Webpay.Common;
+                        using Transbank.Webpay.WebpayPlus;
+                        //fin sección de importación
 
-    WebpayPlus.Transaction tx = new WebpayPlus.Transaction(new WebpayOptions(IntegrationCommerceCodes.WEBPAY_PLUS_DEFERRED, IntegrationApiKeys.WEBPAY, IntegrationType.TEST));
-    WebpayPlusTransactionStatusResponse response = tx.commit(token);
+                        tx = new Transaction(new Options(IntegrationCommerceCodes.WEBPAY_PLUS_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+                        var response = tx.Commit(token_ws);
+
                     </code>
                 </pre>
             </div>

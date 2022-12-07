@@ -21,18 +21,14 @@
         <div class="col-6">
             <pre>
                 <code class="language-java">
-//inicio sección de importación
-import cl.transbank.common.IntegrationApiKeys;
-import cl.transbank.common.IntegrationCommerceCodes;
-import cl.transbank.common.IntegrationType;
-import cl.transbank.webpay.common.WebpayOptions;
-import cl.transbank.webpay.oneclick.Oneclick;
-import cl.transbank.webpay.oneclick.model.*;
-import cl.transbank.webpay.oneclick.responses.*;
-//fin sección de importación
+                    //inicio sección de importación
+                    using Transbank.Common;
+                    using Transbank.Webpay.Common;
+                    using Transbank.Webpay.Oneclick;
+                    //fin sección de importación
 
-Oneclick.MallTransaction tx = new Oneclick.MallTransaction(new WebpayOptions(IntegrationCommerceCodes.ONECLICK_MALL, IntegrationApiKeys.WEBPAY, IntegrationType.TEST));
-OneclickMallTransactionStatusResponse response = tx.status(buyOrder);
+                    var ins = new MallInscription(new Options(IntegrationCommerceCodes.ONECLICK_MALL, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+                    var response = tx.Status(buy_order);
                 </code>
             </pre>
         </div>

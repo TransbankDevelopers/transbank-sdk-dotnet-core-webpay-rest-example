@@ -20,21 +20,17 @@
             </div>
             <div class="col-6">
                 <pre>
-                    <code class="language-json">
-    //inicio sección de importación
-    import cl.transbank.common.IntegrationApiKeys;
-    import cl.transbank.common.IntegrationCommerceCodes;
-    import cl.transbank.common.IntegrationType;
-    import cl.transbank.model.MallTransactionCreateDetails;
-    import cl.transbank.webpay.common.WebpayOptions;
-    import cl.transbank.webpay.transaccioncompleta.MallFullTransaction;
-    import cl.transbank.webpay.transaccioncompleta.model.MallTransactionCommitDetails;
-    import cl.transbank.webpay.transaccioncompleta.responses.*;
-    //fin sección de importación
+                    <code class="language-csharp">
+                        //inicio sección de importación
+                        using Transbank.Common;
+                        using Transbank.Webpay.Common;
+                        using Transbank.Webpay.TransaccionCompletaMall;
+                        using Transbank.Webpay.TransaccionCompletaMall.Common;
+                        //fin sección de importación
 
-    MallFullTransaction tx = new MallFullTransaction(new WebpayOptions(IntegrationCommerceCodes.TRANSACCION_COMPLETA_MALL_DEFERRED, IntegrationApiKeys.WEBPAY, IntegrationType.TEST));
-    MallFullTransactionInstallmentsDetails iDetails = MallFullTransactionInstallmentsDetails.build().add(childCommerceCode, childBuyOrder, installments);
-    MallFullTransactionInstallmentsResponse response = tx.installments(token, iDetails);
+                        tx = new MallFullTransaction(new Options(IntegrationCommerceCodes.TRANSACCION_COMPLETA_MALL_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+
+                        var response = tx.Installments(token, transactionDetails);
                     </code>
                 </pre>
             </div>

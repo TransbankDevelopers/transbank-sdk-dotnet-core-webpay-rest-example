@@ -21,19 +21,16 @@
         </div>
         <div class="col-6">
             <pre>
-                <code class="language-java">
-//inicio sección de importación
-import cl.transbank.common.IntegrationApiKeys;
-import cl.transbank.common.IntegrationCommerceCodes;
-import cl.transbank.common.IntegrationType;
-import cl.transbank.model.MallTransactionCreateDetails;
-import cl.transbank.webpay.common.WebpayOptions;
-import cl.transbank.webpay.webpayplus.responses.*;
-import cl.transbank.webpay.webpayplus.WebpayPlus;
-//fin sección de importación
+                <code class="language-csharp">
+                    //inicio sección de importación
+                    using Transbank.Common;
+                    using Transbank.Webpay.Common;
+                    using Transbank.Webpay.Oneclick;
+                    //fin sección de importación
 
-Oneclick.MallTransaction tx = new Oneclick.MallTransaction(new WebpayOptions(IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED, IntegrationApiKeys.WEBPAY, IntegrationType.TEST));
-OneclickMallTransactionRefundResponse response = tx.refund(buyOrder, childCommerceCode, childBuyOrder, amount);
+                    tx = new MallTransaction(new Options(IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+
+                    var response = tx.Refund(buy_order, child_commerce_code, child_buy_order, amount);
                 </code>
             </pre>
         </div>

@@ -33,18 +33,14 @@
             <pre>
                 <code class="language-java">
 
-//inicio sección de importación
-import cl.transbank.common.IntegrationApiKeys;
-import cl.transbank.common.IntegrationCommerceCodes;
-import cl.transbank.common.IntegrationType;
-import cl.transbank.webpay.common.WebpayOptions;
-import cl.transbank.webpay.oneclick.Oneclick;
-import cl.transbank.webpay.oneclick.model.*;
-import cl.transbank.webpay.oneclick.responses.*;
-//fin sección de importación
+                    //inicio sección de importación
+                    using Transbank.Common;
+                    using Transbank.Webpay.Common;
+                    using Transbank.Webpay.Oneclick;
+                    //fin sección de importación
 
-Oneclick.MallInscription inscription = new Oneclick.MallTransaction(new WebpayOptions(IntegrationCommerceCodes.ONECLICK_MALL, IntegrationApiKeys.WEBPAY, IntegrationType.TEST));
-OneclickMallInscriptionFinishResponse response = inscription.finish(token);
+                    var ins = new MallInscription(new Options(IntegrationCommerceCodes.ONECLICK_MALL, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+                    var response = ins.Finish(token);
 
                 </code>
             </pre>
@@ -84,44 +80,44 @@ OneclickMallInscriptionFinishResponse response = inscription.finish(token);
                 <th>Valor</th>
             </tr>
             <tr>
-                <td>Nombre de Usuario (userName)</td>
-                <td>@ViewBag.username")}</td>
+                <td>Nombre de Usuario (Username)</td>
+                <td>@ViewBag.Username</td>
             </tr>
             <tr>
                 <td>TBK User (tbk_user)</td>
-                <td>@ViewBag.tbk_user")}</td>
+                <td>@ViewBag.TbkUser</td>
             </tr>
         </table>
     </div>
     <div class="row">
         <div class="col-6">
-                <form action="@ViewBag.delete-endpoint")}" method="POST">
-                    <input type="hidden" name="username" value="@ViewBag.username")}">
-                    <input type="hidden" name="tbk_user" value="@ViewBag.tbk_user")}">
+                <form action="@ViewBag.DeleteEndpoint" method="POST">
+                    <input type="hidden" name="username" value="@ViewBag.Username">
+                    <input type="hidden" name="tbk_user" value="@ViewBag.TbkUser">
                     <button type="submit" class="btn btn-primary">BORRAR USUARIO</button>
                 </form>
          </div>
         <div class="col-6">
-            <form action="@ViewBag.authorize-endpoint")}" method="POST">
-                <input type="hidden" name="username" value="@ViewBag.username")}">
-                <input type="hidden" name="tbk_user" value="@ViewBag.tbk_user")}">
+            <form action="@ViewBag.AuthorizeEndpoint" method="POST">
+                <input type="hidden" name="username" value="@ViewBag.Username">
+                <input type="hidden" name="tbk_user" value="@ViewBag.TbkUser">
                 <div class="card">
                   <div class="card-body">
                     <h6 class="card-title">Formulario de autorización</h6>
                     <div class="form-floating mb-3">
-                      <input type="text" class="form-control" name="amount1" id="amount1" value="@ViewBag.amount1")}">
+                      <input type="text" class="form-control" name="amount1" id="amount1" value="@ViewBag.amount1">
                       <label for="amount1">Monto a autorizar Comercio 1</label>
                     </div>
                     <div class="form-floating mb-3">
-                      <input type="text" class="form-control" name="installments1" id="installments1" value="@ViewBag.installments1")}">
+                      <input type="text" class="form-control" name="installments1" id="installments1" value="@ViewBag.installments1">
                       <label for="installments1">Cuotas Comercio 1</label>
                     </div>
                     <div class="form-floating mb-3">
-                      <input type="text" class="form-control" name="amount2" id="amount2" value="@ViewBag.amount2")}">
+                      <input type="text" class="form-control" name="amount2" id="amount2" value="@ViewBag.amount2">
                       <label for="amount2">Monto a autorizar Comercio 2</label>
                     </div>
                     <div class="form-floating mb-3">
-                      <input type="text" class="form-control" name="installments2" id="installments2" value="@ViewBag.installments2")}">
+                      <input type="text" class="form-control" name="installments2" id="installments2" value="@ViewBag.installments2">
                       <label for="installments2">Cuotas Comercio 2</label>
                     </div>
                     <button type="submit" class="btn btn-primary">AUTORIZAR PAGO</button>
