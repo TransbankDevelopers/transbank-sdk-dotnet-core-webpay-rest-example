@@ -16,7 +16,7 @@ namespace Controllers.Patpass
         public PatpassComercioController(IUrlHelperFactory urlHelperFactory, IActionContextAccessor actionContextAccessor) :
             base(urlHelperFactory, actionContextAccessor)
         {
-            inscription = new Inscription(new Options(IntegrationCommerceCodes.PATPASS_COMERCIO, IntegrationApiKeys.PATPASS_COMERCIO, PatpassComercioIntegrationType.Live));
+            inscription = new Inscription(new Options(IntegrationCommerceCodes.PATPASS_COMERCIO, IntegrationApiKeys.PATPASS_COMERCIO, PatpassComercioIntegrationType.Test));
         }
 
         [Route("start")]
@@ -24,13 +24,13 @@ namespace Controllers.Patpass
         {
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
-            string returnUrl = "https://mvargas:5001/patpass_comercio/commit";//request.getRequestURL().toString().replace("start","commit"); // urlHelper.Action("start", "patpass_comercio", null, Request.Scheme);
+            string returnUrl = urlHelper.Action("commit", "patpass_comercio", null, Request.Scheme);
             string name = "Isaac";
             string lastName = "Newton";
             string secondLastName = "Gonzales";
             string rut = "11111111-1";
             string serviceId = "Service_" + GetRandomNumber();
-            string finalUrl = "https://mvargas:5001/patpass_comercio/voucher_return"; //request.getRequestURL().toString().replace("start","voucher_return");//urlHelper.Action("Finish", "PatpassComercio", null, Request.Scheme);
+            string finalUrl = urlHelper.Action("voucher_return", "patpass_comercio", null, Request.Scheme);
             decimal maxAmount = 100000;
             string phone = "123456734";
             string cellPhone = "123456723";
