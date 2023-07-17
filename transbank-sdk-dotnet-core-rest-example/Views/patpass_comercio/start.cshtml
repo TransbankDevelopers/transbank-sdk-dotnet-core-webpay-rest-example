@@ -21,17 +21,15 @@
             <code class="language-java">
 
 //inicio sección de importación
-import cl.transbank.common.IntegrationApiKeys;
-import cl.transbank.common.IntegrationCommerceCodes;
-import cl.transbank.common.IntegrationType;
-import cl.transbank.patpass.PatpassComercio;
-import cl.transbank.patpass.model.PatpassOptions;
-import cl.transbank.patpass.responses.*;
+using Transbank.Common;
+using Transbank.Patpass.Common;
+using Transbank.Patpass.PatpassComercio;
+using Transbank.Patpass.PatpassComercio.Responses;
 //fin sección de importación
 
-PatpassComercio.Inscription inscription = new PatpassComercio.Inscription(new PatpassOptions(IntegrationCommerceCodes.PATPASS_COMERCIO, IntegrationApiKeys.PATPASS_COMERCIO, IntegrationType.TEST));
+Inscription inscription = new Inscription(new Options(IntegrationCommerceCodes.PATPASS_COMERCIO, IntegrationApiKeys.PATPASS_COMERCIO, PatpassComercioIntegrationType.Test));
 
-PatpassComercioInscriptionStartResponse response = inscription.start(
+StartResponse response = inscription.start(
                 returnUrl,
                 name,
                 lastName,
