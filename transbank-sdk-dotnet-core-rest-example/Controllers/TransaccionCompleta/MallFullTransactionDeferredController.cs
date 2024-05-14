@@ -125,78 +125,6 @@ namespace Controllers.TransaccionCompleta
 
             return View($"{viewBase}capture.cshtml");
         }
-        [Route("increase_amount")]
-        public ActionResult IncreaseAmount(String token_ws, String buy_order, String child_buy_order, String child_commerce_code, String authorization_code, Decimal amount)
-        {
-
-            var response = tx.IncreaseAmount(token_ws, child_commerce_code, child_buy_order, authorization_code, amount);
-
-            ViewBag.Response = response;
-            ViewBag.Resp = ToJson(response);
-            ViewBag.TokenWs = token_ws;
-            ViewBag.Amount = amount;
-            ViewBag.AuthorizationCode = authorization_code;
-            ViewBag.BuyOrder = buy_order;
-            ViewBag.ChildCommerceCode = child_commerce_code;
-            ViewBag.ChildBuyOrder = child_buy_order;
-
-            ViewBag.CaptureEndpoint = CreateUrl(ctrlName, "capture");
-            ViewBag.IncreaseEndpoint = CreateUrl(ctrlName, "increase_amount");
-            ViewBag.IncreaseDateEndpoint = CreateUrl(ctrlName, "increase_date");
-            ViewBag.ReverseEndpoint = CreateUrl(ctrlName, "reverse");
-            ViewBag.RefundEndpoint = CreateUrl(ctrlName, "refund");
-            ViewBag.HistoryEndpoint = CreateUrl(ctrlName, "history");
-
-            return View($"{viewBase}increase-amount.cshtml");
-        }
-        [Route("increase_date")]
-        public ActionResult IncreaseDate(String token_ws, String buy_order, String child_buy_order, String child_commerce_code, String authorization_code, Decimal amount)
-        {
-
-            var response = tx.IncreaseAuthorizationDate(token_ws, child_commerce_code, child_buy_order, authorization_code);
-
-            ViewBag.Response = response;
-            ViewBag.Resp = ToJson(response);
-            ViewBag.TokenWs = token_ws;
-            ViewBag.BuyOrder = buy_order;
-            ViewBag.Amount = amount;
-            ViewBag.AuthorizationCode = authorization_code;
-            ViewBag.ChildCommerceCode = child_commerce_code;
-            ViewBag.ChildBuyOrder = child_buy_order;
-
-            ViewBag.StatusEndpoint = CreateUrl(ctrlName, "status");
-            ViewBag.RefundEndpoint = CreateUrl(ctrlName, "refund");
-            ViewBag.CaptureEndpoint = CreateUrl(ctrlName, "capture");
-            ViewBag.IncreaseEndpoint = CreateUrl(ctrlName, "increase_amount");
-            ViewBag.IncreaseDateEndpoint = CreateUrl(ctrlName, "increase_date");
-            ViewBag.ReverseEndpoint = CreateUrl(ctrlName, "reverse");
-            ViewBag.HistoryEndpoint = CreateUrl(ctrlName, "history");
-
-            return View($"{viewBase}increase-date.cshtml");
-        }
-        [Route("reverse")]
-        public ActionResult Reverse(String token_ws, String buy_order, String child_buy_order, String child_commerce_code, String authorization_code, Decimal amount)
-        {
-
-            var response = tx.ReversePreAuthorizedAmount(token_ws, child_commerce_code, child_buy_order, authorization_code, amount);
-
-            ViewBag.Response = response;
-            ViewBag.Resp = ToJson(response);
-            ViewBag.TokenWs = token_ws;
-            ViewBag.BuyOrder = buy_order;
-            ViewBag.Amount = amount;
-            ViewBag.AuthorizationCode = authorization_code;
-
-            ViewBag.StatusEndpoint = CreateUrl(ctrlName, "status");
-            ViewBag.RefundEndpoint = CreateUrl(ctrlName, "refund");
-            ViewBag.CaptureEndpoint = CreateUrl(ctrlName, "capture");
-            ViewBag.IncreaseEndpoint = CreateUrl(ctrlName, "increase_amount");
-            ViewBag.IncreaseDateEndpoint = CreateUrl(ctrlName, "increase_date");
-            ViewBag.ReverseEndpoint = CreateUrl(ctrlName, "reverse");
-            ViewBag.HistoryEndpoint = CreateUrl(ctrlName, "history");
-
-            return View($"{viewBase}reverse-amount.cshtml");
-        }
         [Route("status")]
         public ActionResult status(String token_ws)
         {
@@ -221,29 +149,6 @@ namespace Controllers.TransaccionCompleta
             ViewBag.TokenWs = token_ws;
 
             return View($"{viewBase}refund.cshtml");
-        }
-        [Route("history")]
-        public ActionResult History(String token_ws, String buy_order, String child_buy_order, String child_commerce_code, String authorization_code, int amount)
-        {
-
-            var response = tx.DeferredCaptureHistory(token_ws, child_commerce_code, child_buy_order);
-
-            ViewBag.Response = response;
-            ViewBag.Resp = ToJson(response);
-            ViewBag.TokenWs = token_ws;
-            ViewBag.BuyOrder = buy_order;
-            ViewBag.Amount = amount;
-            ViewBag.AuthorizationCode = authorization_code;
-
-            ViewBag.StatusEndpoint = CreateUrl(ctrlName, "status");
-            ViewBag.RefundEndpoint = CreateUrl(ctrlName, "refund");
-            ViewBag.CaptureEndpoint = CreateUrl(ctrlName, "capture");
-            ViewBag.IncreaseEndpoint = CreateUrl(ctrlName, "increase_amount");
-            ViewBag.IncreaseDateEndpoint = CreateUrl(ctrlName, "increase_date");
-            ViewBag.ReverseEndpoint = CreateUrl(ctrlName, "reverse");
-            ViewBag.HistoryEndpoint = CreateUrl(ctrlName, "history");
-
-            return View($"{viewBase}history.cshtml");
         }
         [Route("installments")]
         public ActionResult Installments(String token, String child_commerce_code, String child_buy_order, Int32 installments)

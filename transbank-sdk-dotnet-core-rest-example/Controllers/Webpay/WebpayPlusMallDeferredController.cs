@@ -124,58 +124,6 @@ namespace Controllers.Webpay
             ViewBag.StatusEndpoint = CreateUrl(ctrlName, "status");
             return View($"{viewBase}capture.cshtml");
         }
-        [Route("increase_amount")]
-        public ActionResult IncreaseAmount()
-        {
-            var token = Request.Form["token_ws"];
-            decimal amount = decimal.Parse(Request.Form["amount"]);
-            var childBuyOrder = Request.Form["child_buy_order"];
-            var childCommerceCode = Request.Form["child_commerce_code"];
-            var authorizationCode = Request.Form["authorization_code"];
-
-            var response = tx.IncreaseAmount(token, childCommerceCode, childBuyOrder, authorizationCode, amount);
-            AddDetailModelDeferred(response, childCommerceCode, token, childBuyOrder, response.AuthorizationCode, response.TotalAmount);
-            return View($"{viewBase}increase-amount.cshtml");
-        }
-        [Route("reverse")]
-        public ActionResult ReverseAmount()
-        {
-            var token = Request.Form["token_ws"];
-            decimal amount = decimal.Parse(Request.Form["amount"]);
-            var childBuyOrder = Request.Form["child_buy_order"];
-            var childCommerceCode = Request.Form["child_commerce_code"];
-            var authorizationCode = Request.Form["authorization_code"];
-
-            var response = tx.ReversePreAuthorizedAmount(token, childCommerceCode, childBuyOrder, authorizationCode, amount);
-            AddDetailModelDeferred(response, childCommerceCode, token, childBuyOrder, response.AuthorizationCode, response.TotalAmount);
-            return View($"{viewBase}reverse-amount.cshtml");
-        }
-        [Route("increase_date")]
-        public ActionResult IncreaseDate()
-        {
-            var token = Request.Form["token_ws"];
-            decimal amount = decimal.Parse(Request.Form["amount"]);
-            var childBuyOrder = Request.Form["child_buy_order"];
-            var childCommerceCode = Request.Form["child_commerce_code"];
-            var authorizationCode = Request.Form["authorization_code"];
-
-            var response = tx.IncreaseAuthorizationDate(token, childCommerceCode, childBuyOrder, authorizationCode);
-            AddDetailModelDeferred(response, childCommerceCode, token, childBuyOrder, response.AuthorizationCode, amount);
-            return View($"{viewBase}increase-date.cshtml");
-        }
-        [Route("history")]
-        public ActionResult History()
-        {
-            var token = Request.Form["token_ws"];
-            decimal amount = decimal.Parse(Request.Form["amount"]);
-            var childBuyOrder = Request.Form["child_buy_order"];
-            var childCommerceCode = Request.Form["child_commerce_code"];
-            var authorizationCode = Request.Form["authorization_code"];
-
-            var response = tx.DeferredCaptureHistory(token, childCommerceCode, childBuyOrder);
-            AddDetailModelDeferred(response, childCommerceCode, token, childBuyOrder, authorizationCode, amount);
-            return View($"{viewBase}history.cshtml");
-        }
         private void AddDetailModelDeferred(Object response, String childCommerceCode, String tokenWs, String childBuyOrder, String authorizationCode, decimal? amount)
         {
             ViewBag.Response = response;
