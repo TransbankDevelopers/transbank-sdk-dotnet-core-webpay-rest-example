@@ -18,6 +18,7 @@ namespace Controllers.Oneclick
     public class OneclickMallController : BaseController
     {
         private MallInscription inscription;
+       // public MallInscription mallInscription = MallInscription.buildForIntegration(new WebpayOptions().Options.CommerceCode, new WebpayOptions().Options.ApiKey);
         private MallTransaction tx;
         private String ctrlName = "oneclick_mall";
         private String viewBase = "Views/oneclick_mall/";
@@ -25,8 +26,9 @@ namespace Controllers.Oneclick
         public OneclickMallController(IUrlHelperFactory urlHelperFactory, IActionContextAccessor actionContextAccessor) :
             base(urlHelperFactory, actionContextAccessor)
         {
-            inscription = new MallInscription(new Options(IntegrationCommerceCodes.ONECLICK_MALL, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
-            tx = new MallTransaction(new Options(IntegrationCommerceCodes.ONECLICK_MALL, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+            // inscription = new MallInscription(new Options(IntegrationCommerceCodes.ONECLICK_MALL, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+            inscription = MallInscription.buildForIntegration(IntegrationCommerceCodes.ONECLICK_MALL,IntegrationApiKeys.WEBPAY);
+            tx =  MallTransaction.buildForIntegration(IntegrationCommerceCodes.ONECLICK_MALL, IntegrationApiKeys.WEBPAY);
         }
 
         [Route("start")]
@@ -51,20 +53,35 @@ namespace Controllers.Oneclick
         public ActionResult Finish(String tbk_token)
         {
             var response = inscription.Finish(tbk_token);
-            ViewBag.Response = response;
-            ViewBag.Resp = ToJson(response);
-            ViewBag.Token = tbk_token;
-            ViewBag.Username = HttpContext.Session.GetString("username");
-            ViewBag.TbkUser = response.TbkUser;
-            ViewBag.Amount1 = 1000;
-            ViewBag.installments1 = 4;
-            ViewBag.Amount2 = 500;
-            ViewBag.installments2 = 5;
-            ViewBag.AuthorizeEndpoint = CreateUrl(ctrlName, "authorize");
-            ViewBag.DeleteEndpoint = CreateUrl(ctrlName, "delete");
+           
+            if (tbk_token != "" && response.TbkUser==null)
+            {
+                
+                ViewBag.Response = response;
+                ViewBag.Resp = ToJson(response);
+                ViewBag.Token = tbk_token;
+                return View($"{viewBase}abort.cshtml");
 
-            return View($"{viewBase}finish.cshtml");
+            }
+            else
+            {
+                ViewBag.Response = response;
+                ViewBag.Resp = ToJson(response);
+                ViewBag.Token = tbk_token;
+                ViewBag.Username = HttpContext.Session.GetString("username");
+                ViewBag.TbkUser = response.TbkUser;
+                ViewBag.Amount1 = 1000;
+                ViewBag.installments1 = 4;
+                ViewBag.Amount2 = 500;
+                ViewBag.installments2 = 5;
+                ViewBag.AuthorizeEndpoint = CreateUrl(ctrlName, "authorize");
+                ViewBag.DeleteEndpoint = CreateUrl(ctrlName, "delete");
+
+                return View($"{viewBase}finish.cshtml");
+            }
         }
+     
+     
         [Route("delete")]
         public ActionResult Delete(String username, String tbk_user)
         {

@@ -75,6 +75,10 @@ namespace Controllers.Webpay
         [Route("commit")]
         public ActionResult Commit(String token_ws)
         {
+            if (token_ws == null)
+            {
+                return View($"{viewBase}abort.cshtml");
+            }
             var response = tx.Commit(token_ws);
             var detail = response.Details[0];
             AddDetailModelDeferred(response, detail.CommerceCode, token_ws, detail.BuyOrder, detail.AuthorizationCode, detail.Amount);

@@ -19,7 +19,9 @@ namespace Controllers.Webpay
         public WebpayPlusMallController(IUrlHelperFactory urlHelperFactory, IActionContextAccessor actionContextAccessor) :
             base(urlHelperFactory, actionContextAccessor)
         {
-            tx = new MallTransaction(new Options(IntegrationCommerceCodes.WEBPAY_PLUS_MALL, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+          //   tx = new MallTransaction(new Options(IntegrationCommerceCodes.WEBPAY_PLUS_MALL, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+            tx = MallTransaction.buildForIntegration(IntegrationCommerceCodes.WEBPAY_PLUS_MALL, IntegrationApiKeys.WEBPAY);
+          
         }
         [Route("create")]
         public ActionResult Create()
@@ -67,30 +69,36 @@ namespace Controllers.Webpay
             ViewBag.ReturnUrl = returnUrl;
             ViewBag.Url = response.Url;
             ViewBag.Token = response.Token;
-
+            TempData["Token"] = response.Token;
             return View($"{viewBase}create.cshtml");
         }
         [Route("commit")]
         public ActionResult Commit(String token_ws)
         {
-            var response = tx.Commit(token_ws);
-            var detail = response.Details[0];
+            var token = TempData["Token"] as string;
+            var status = tx.Status(token);
+            if (status.CardDetail == null || token_ws == null && status.CardDetail != null)
+            {
 
-            ViewBag.Response = response;
-            ViewBag.Resp = ToJson(response);
-
-            ViewBag.RefundEndpoint = CreateUrl(ctrlName, "refund");
-            ViewBag.StatusEndpoint = CreateUrl(ctrlName, "status");
-            ViewBag.Response = response;
-            ViewBag.Resp = ToJson(response);
-
-            ViewBag.TokenWs = token_ws;
-            ViewBag.AuthorizationCode = detail.AuthorizationCode;
-            ViewBag.Amount = detail.Amount;
-            ViewBag.ChildBuyOrder = detail.BuyOrder;
-            ViewBag.ChildCommerceCode = detail.CommerceCode;
-
-            return View($"{viewBase}commit.cshtml");
+                return View($"{viewBase}abort.cshtml");
+            }
+            else
+            {
+                var response = tx.Commit(token);
+                var detail = response.Details[0];
+                ViewBag.Response = response;
+                ViewBag.Resp = ToJson(response);
+                ViewBag.RefundEndpoint = CreateUrl(ctrlName, "refund");
+                ViewBag.StatusEndpoint = CreateUrl(ctrlName, "status");
+                ViewBag.Response = response;
+                ViewBag.Resp = ToJson(response);
+                ViewBag.TokenWs = token_ws;
+                ViewBag.AuthorizationCode = detail.AuthorizationCode;
+                ViewBag.Amount = detail.Amount;
+                ViewBag.ChildBuyOrder = detail.BuyOrder;
+                ViewBag.ChildCommerceCode = detail.CommerceCode;
+                return View($"{viewBase}commit.cshtml");
+            }
         }
         [Route("refund")]
         public ActionResult Refund()
@@ -99,13 +107,10 @@ namespace Controllers.Webpay
             decimal amount = decimal.Parse(Request.Form["amount"]);
             var childBuyOrder = Request.Form["child_buy_order"];
             var childCommerceCode = Request.Form["child_commerce_code"];
-
             var response = tx.Refund(token, childBuyOrder, childCommerceCode, amount);
-
             ViewBag.Response = response;
             ViewBag.Resp = ToJson(response);
             ViewBag.TokenWs = token;
-
             return View($"{viewBase}refund.cshtml");
         }
 

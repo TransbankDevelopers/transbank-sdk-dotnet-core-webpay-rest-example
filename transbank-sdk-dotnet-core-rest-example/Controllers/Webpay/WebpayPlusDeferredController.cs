@@ -19,7 +19,8 @@ namespace Controllers.Webpay
         public WebpayPlusDeferredController(IUrlHelperFactory urlHelperFactory, IActionContextAccessor actionContextAccessor) : 
             base(urlHelperFactory, actionContextAccessor)
         {
-            tx = new Transaction(new Options(IntegrationCommerceCodes.WEBPAY_PLUS_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+          //  tx = new Transaction(new Options(IntegrationCommerceCodes.WEBPAY_PLUS_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+            tx = Transaction.buildForIntegration(IntegrationCommerceCodes.WEBPAY_PLUS_DEFERRED, IntegrationApiKeys.WEBPAY);
         }
         [Route("create")]
         public ActionResult Create()
@@ -46,6 +47,10 @@ namespace Controllers.Webpay
         [Route("commit")]
         public ActionResult Commit(String token_ws)
         {
+            if (token_ws == null) 
+            {
+                return View($"{viewBase}abort.cshtml");
+            }
             var response = tx.Commit(token_ws);
             AddDetailModelDeferred(response, token_ws, response.BuyOrder, response.AuthorizationCode, response.Amount);
             return View($"{viewBase}commit.cshtml");

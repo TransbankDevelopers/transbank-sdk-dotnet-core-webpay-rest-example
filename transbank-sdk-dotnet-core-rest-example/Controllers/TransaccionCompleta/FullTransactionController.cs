@@ -19,7 +19,8 @@ namespace Controllers.TransaccionCompleta
         public FullTransactionController(IUrlHelperFactory urlHelperFactory, IActionContextAccessor actionContextAccessor) :
             base(urlHelperFactory, actionContextAccessor)
         {
-            tx = new FullTransaction(new Options(IntegrationCommerceCodes.TRANSACCION_COMPLETA, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+            //tx = new FullTransaction(new Options(IntegrationCommerceCodes.TRANSACCION_COMPLETA, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+            tx = FullTransaction.buildForIntegration(IntegrationCommerceCodes.TRANSACCION_COMPLETA, IntegrationApiKeys.WEBPAY);
         }
         [Route("form")]
         public ActionResult Form()
