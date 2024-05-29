@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Transbank.Common;
 using Transbank.Patpass.Common;
-using Transbank.Patpass.PatpassComercio;
+using Transbank.Patpass;
+using Transbank.PatpassComercio;
 
 namespace Controllers.Patpass
 {
@@ -12,11 +13,12 @@ namespace Controllers.Patpass
     public class PatpassComercioController : BaseController
     {
         private Inscription inscription;
+        
 
         public PatpassComercioController(IUrlHelperFactory urlHelperFactory, IActionContextAccessor actionContextAccessor) :
             base(urlHelperFactory, actionContextAccessor)
         {
-            //     inscription = new Inscription(new Options(IntegrationCommerceCodes.PATPASS_COMERCIO, IntegrationApiKeys.PATPASS_COMERCIO, PatpassComercioIntegrationType.Test));
+           
             inscription =Inscription.buildForIntegration(IntegrationCommerceCodes.PATPASS_COMERCIO, IntegrationApiKeys.PATPASS_COMERCIO);
         }
 
