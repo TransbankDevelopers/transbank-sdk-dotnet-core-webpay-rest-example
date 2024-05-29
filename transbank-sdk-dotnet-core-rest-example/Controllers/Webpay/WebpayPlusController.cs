@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Newtonsoft.Json;
 using System;
 using Transbank.Common;
 using Transbank.Webpay.Common;
@@ -21,7 +22,7 @@ namespace Controllers.Webpay
             base(urlHelperFactory, actionContextAccessor)
         {
             tx= Transaction.buildForIntegration(IntegrationCommerceCodes.WEBPAY_PLUS, IntegrationApiKeys.WEBPAY);
-          //  tx = new Transaction(new Options(IntegrationCommerceCodes.WEBPAY_PLUS, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+          
         }
         [Route("create")]
         public ActionResult Create()
@@ -43,7 +44,7 @@ namespace Controllers.Webpay
             ViewBag.Url = response.Url;
             ViewBag.Token = response.Token;
             TempData["Token"] = response.Token;
-          
+           
             return View($"{viewBase}create.cshtml");
         }
         
@@ -52,11 +53,24 @@ namespace Controllers.Webpay
         {         
             var token = TempData["Token"] as string;
             var status=  tx.Status(token);
-            if (status.CardDetail == null || tbk_user == null && status.CardDetail != null)
+            
+            if (status.CardDetail == null)
             {
-                
+				
+				var sessionId = status.SessionId;
+				var buyOrder = status.BuyOrder;
+				var tbkId = token;
+				var data = new
+				{
+					SessionId = sessionId,
+					BuyOrder = buyOrder,
+					TBK_ID = tbkId
+				};
+
+				ViewBag.Status = ToJson(data);
                 return View($"{viewBase}abort.cshtml");
             }
+            
             else
             {
                 var response = tx.Commit(token);
@@ -74,8 +88,10 @@ namespace Controllers.Webpay
         public ActionResult Refund()
         {
 
-            var token = Request.Form["token_ws"];
+             var token = Request.Form["token_ws"];
+            //var token = TempData["Token"] as string;
             decimal amount = decimal.Parse(Request.Form["amount"]);
+         
 
             var response = tx.Refund(token, amount);
 

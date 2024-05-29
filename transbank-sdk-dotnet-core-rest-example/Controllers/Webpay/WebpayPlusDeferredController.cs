@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Newtonsoft.Json.Linq;
 using System;
 using Transbank.Common;
 using Transbank.Webpay.Common;
@@ -19,7 +20,7 @@ namespace Controllers.Webpay
         public WebpayPlusDeferredController(IUrlHelperFactory urlHelperFactory, IActionContextAccessor actionContextAccessor) : 
             base(urlHelperFactory, actionContextAccessor)
         {
-          //  tx = new Transaction(new Options(IntegrationCommerceCodes.WEBPAY_PLUS_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+         
             tx = Transaction.buildForIntegration(IntegrationCommerceCodes.WEBPAY_PLUS_DEFERRED, IntegrationApiKeys.WEBPAY);
         }
         [Route("create")]
@@ -38,8 +39,8 @@ namespace Controllers.Webpay
             ViewBag.SessionId = sessionId;
             ViewBag.Amount = amount;
             ViewBag.ReturnUrl = returnUrl;
-          
-            ViewBag.Url = response.Url;
+			TempData["Token"] = response.Token;
+			ViewBag.Url = response.Url;
             ViewBag.Token = response.Token;
 
             return View($"{viewBase}create.cshtml");
@@ -47,13 +48,29 @@ namespace Controllers.Webpay
         [Route("commit")]
         public ActionResult Commit(String token_ws)
         {
-            if (token_ws == null) 
+			var token = TempData["Token"] as string;
+			var status = tx.Status(token);
+            if (token_ws == null)
             {
+                var sessionId = status.SessionId;
+                var buyOrder = status.BuyOrder;
+                var tbkId = token;
+                var data = new
+                {
+                    SessionId = sessionId,
+                    BuyOrder = buyOrder,
+                    TBK_ID = tbkId
+                };
+
+                ViewBag.Status = ToJson(data);
                 return View($"{viewBase}abort.cshtml");
             }
-            var response = tx.Commit(token_ws);
-            AddDetailModelDeferred(response, token_ws, response.BuyOrder, response.AuthorizationCode, response.Amount);
-            return View($"{viewBase}commit.cshtml");
+            else
+            {
+                var response = tx.Commit(token_ws);
+                AddDetailModelDeferred(response, token_ws, response.BuyOrder, response.AuthorizationCode, response.Amount);
+                return View($"{viewBase}commit.cshtml");
+            }
         }
         [Route("refund")]
         public ActionResult Refund()

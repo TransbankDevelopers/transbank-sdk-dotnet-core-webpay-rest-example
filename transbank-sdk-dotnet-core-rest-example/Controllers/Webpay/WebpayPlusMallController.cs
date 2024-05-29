@@ -19,7 +19,7 @@ namespace Controllers.Webpay
         public WebpayPlusMallController(IUrlHelperFactory urlHelperFactory, IActionContextAccessor actionContextAccessor) :
             base(urlHelperFactory, actionContextAccessor)
         {
-          //   tx = new MallTransaction(new Options(IntegrationCommerceCodes.WEBPAY_PLUS_MALL, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+          
             tx = MallTransaction.buildForIntegration(IntegrationCommerceCodes.WEBPAY_PLUS_MALL, IntegrationApiKeys.WEBPAY);
           
         }
@@ -75,14 +75,26 @@ namespace Controllers.Webpay
         [Route("commit")]
         public ActionResult Commit(String token_ws)
         {
-            var token = TempData["Token"] as string;
-            var status = tx.Status(token);
-            if (status.CardDetail == null || token_ws == null && status.CardDetail != null)
-            {
+			var token = TempData["Token"] as string;
+			var status = tx.Status(token);
 
-                return View($"{viewBase}abort.cshtml");
-            }
-            else
+			if (status.CardDetail == null)
+			{
+
+				var sessionId = status.SessionId;
+				var buyOrder = status.BuyOrder;
+				var tbkId = token;
+				var data = new
+				{
+					SessionId = sessionId,
+					BuyOrder = buyOrder,
+					TBK_ID = tbkId
+				};
+
+				ViewBag.Status = ToJson(data);
+				return View($"{viewBase}abort.cshtml");
+			}
+			else
             {
                 var response = tx.Commit(token);
                 var detail = response.Details[0];

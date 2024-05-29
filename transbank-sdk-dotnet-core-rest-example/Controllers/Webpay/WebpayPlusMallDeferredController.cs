@@ -65,8 +65,8 @@ namespace Controllers.Webpay
             ViewBag.ChildCommerceCode2 = childCommerceCode2;
             ViewBag.ChildBuyOrder2 = childBuyOrder2;
             ViewBag.amount2 = amount2;
-
-            ViewBag.ReturnUrl = returnUrl;
+			TempData["Token"] = response.Token;
+			ViewBag.ReturnUrl = returnUrl;
             ViewBag.Url = response.Url;
             ViewBag.Token = response.Token;
 
@@ -75,14 +75,30 @@ namespace Controllers.Webpay
         [Route("commit")]
         public ActionResult Commit(String token_ws)
         {
+			var token = TempData["Token"] as string;
+			var status = tx.Status(token);
             if (token_ws == null)
             {
+                var sessionId = status.SessionId;
+                var buyOrder = status.BuyOrder;
+                var tbkId = token;
+                var data = new
+                {
+                    SessionId = sessionId,
+                    BuyOrder = buyOrder,
+                    TBK_ID = tbkId
+                };
+
+                ViewBag.Status = ToJson(data);
                 return View($"{viewBase}abort.cshtml");
             }
-            var response = tx.Commit(token_ws);
-            var detail = response.Details[0];
-            AddDetailModelDeferred(response, detail.CommerceCode, token_ws, detail.BuyOrder, detail.AuthorizationCode, detail.Amount);
-            return View($"{viewBase}commit.cshtml");
+            else
+            {
+                var response = tx.Commit(token_ws);
+                var detail = response.Details[0];
+                AddDetailModelDeferred(response, detail.CommerceCode, token_ws, detail.BuyOrder, detail.AuthorizationCode, detail.Amount);
+                return View($"{viewBase}commit.cshtml");
+            }
         }
         [Route("refund")]
         public ActionResult Refund()
