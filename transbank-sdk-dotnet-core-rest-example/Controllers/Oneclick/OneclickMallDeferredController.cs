@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using System;
 using System.Collections.Generic;
 using Transbank.Common;
-using Transbank.Patpass.PatpassComercio;
+using Transbank.Patpass;
 using Transbank.Webpay.Common;
 using Transbank.Webpay.Oneclick;
-
+using Transbank.Exceptions;
 namespace Controllers.Oneclick
 {
 
@@ -22,8 +22,7 @@ namespace Controllers.Oneclick
         public OneclickMallDeferredController(IUrlHelperFactory urlHelperFactory, IActionContextAccessor actionContextAccessor) :
             base(urlHelperFactory, actionContextAccessor)
         {
-           // ins = new MallInscription(new Options(IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
-           // tx = new MallTransaction(new Options(IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+      
             ins = MallInscription.buildForIntegration(IntegrationCommerceCodes.ONECLICK_MALL, IntegrationApiKeys.WEBPAY);
             tx = MallTransaction.buildForIntegration(IntegrationCommerceCodes.ONECLICK_MALL, IntegrationApiKeys.WEBPAY);
         }
@@ -78,9 +77,15 @@ namespace Controllers.Oneclick
         [Route("delete")]
         public ActionResult Delete(String username, String tbk_user)
         {
-            var response = ins.Delete(tbk_user, username);
-            ViewBag.Resp = ToJson(response);
-
+            try
+            {
+                var response = ins.Delete(tbk_user, username);
+                ViewBag.Resp = ToJson(response);
+            }
+            catch (InscriptionDeleteException e)
+            {
+                ViewBag.Resp = e.Code;
+            }
             return View($"{viewBase}delete.cshtml");
         }
         [Route("authorize")]
