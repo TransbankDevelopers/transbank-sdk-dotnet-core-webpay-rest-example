@@ -36,7 +36,19 @@
             </pre>
         </div>
     </div><br>
-
+<div class="row">
+    <div class="col-6">
+        <pre>
+        <code class="language-json">
+                @ViewBag.Resp
+            </code>
+        </pre>
+    </div>
+    <div class="col-6">
+        <h4>Respuesta</h4>
+        En caso de éxito Transbank responderá con un status code 204 (No Content) y el sdk no retornará respuesta. En el caso de no encontrarse el userName o tbkUser Transbank responderá con un status code 404 (Not Found) y el sdk retornara una excepción.
+    </div>
+</div>
 
     <div class="row">
         <div class="col-6">
