@@ -60,7 +60,7 @@ namespace Controllers.TransaccionCompleta
             ViewBag.BuyOrder = buyOrder;
             ViewBag.ChildCommerceCode = childCommerceCode;
             ViewBag.ChildBuyOrder = childBuyOrder;
-
+            TempData["Token"] = response.Token;
             ViewBag.CommitEndpoint = CreateUrl(ctrlName, "commit");
             ViewBag.InstallmentsEndpoint = CreateUrl(ctrlName, "installments");
 
@@ -80,7 +80,7 @@ namespace Controllers.TransaccionCompleta
                 null,
                 gracePeriod
             ));
-
+            token ??= TempData["Token"] as string;
             var response = tx.Commit(token, transactionDetails);
 
             ViewBag.Response = response;
@@ -169,7 +169,7 @@ namespace Controllers.TransaccionCompleta
             ViewBag.ChildBuyOrder = child_buy_order;
             ViewBag.Amount = 1000;
             ViewBag.TokenWs = token;
-
+            ViewBag.CommitEndpoint = CreateUrl(ctrlName, "commit");
             ViewBag.CaptureEndpoint = CreateUrl(ctrlName, "capture");
             ViewBag.IncreaseEndpoint = CreateUrl(ctrlName, "increase_amount");
             ViewBag.IncreaseDateEndpoint = CreateUrl(ctrlName, "increase_date");
