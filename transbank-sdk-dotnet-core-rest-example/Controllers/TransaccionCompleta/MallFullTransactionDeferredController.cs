@@ -80,7 +80,6 @@ namespace Controllers.TransaccionCompleta
                 null,
                 gracePeriod
             ));
-           // token ??= TempData["Token"] as string;
             var response = tx.Commit(token, transactionDetails);
 
             ViewBag.Response = response;
