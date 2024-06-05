@@ -23,8 +23,8 @@ namespace Controllers.Oneclick
             base(urlHelperFactory, actionContextAccessor)
         {
       
-            ins = MallInscription.buildForIntegration(IntegrationCommerceCodes.ONECLICK_MALL, IntegrationApiKeys.WEBPAY);
-            tx = MallTransaction.buildForIntegration(IntegrationCommerceCodes.ONECLICK_MALL, IntegrationApiKeys.WEBPAY);
+            ins = MallInscription.buildForIntegration(IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED, IntegrationApiKeys.WEBPAY);
+            tx = MallTransaction.buildForIntegration(IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED, IntegrationApiKeys.WEBPAY);
         }
         [Route("start")]
         public ActionResult Start()
