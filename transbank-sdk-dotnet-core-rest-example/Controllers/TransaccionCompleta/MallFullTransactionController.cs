@@ -122,6 +122,8 @@ namespace Controllers.TransaccionCompleta
             ViewBag.Amount = 1000;
             ViewBag.TokenWs = token;
             ViewBag.Resp = ToJson(response);
+            ViewBag.ChildCommerceCode = child_commerce_code;
+            ViewBag.ChildBuyOrder = child_buy_order;
             ViewBag.StatusEndpoint = CreateUrl(ctrlName, "status");
             ViewBag.RefundEndpoint = CreateUrl(ctrlName, "refund");
 

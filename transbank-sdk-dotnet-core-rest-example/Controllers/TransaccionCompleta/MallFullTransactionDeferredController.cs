@@ -60,7 +60,7 @@ namespace Controllers.TransaccionCompleta
             ViewBag.BuyOrder = buyOrder;
             ViewBag.ChildCommerceCode = childCommerceCode;
             ViewBag.ChildBuyOrder = childBuyOrder;
-
+            TempData["Token"] = response.Token;
             ViewBag.CommitEndpoint = CreateUrl(ctrlName, "commit");
             ViewBag.InstallmentsEndpoint = CreateUrl(ctrlName, "installments");
 
@@ -80,7 +80,6 @@ namespace Controllers.TransaccionCompleta
                 null,
                 gracePeriod
             ));
-
             var response = tx.Commit(token, transactionDetails);
 
             ViewBag.Response = response;
@@ -102,14 +101,14 @@ namespace Controllers.TransaccionCompleta
             return View($"{viewBase}commit.cshtml");
         }
         [Route("capture")]
-        public ActionResult Capture(String token_ws, String buy_order, String child_buy_order, String child_commerce_code, String authorization_code, Decimal amount)
+        public ActionResult Capture(String token, String buy_order, String child_buy_order, String child_commerce_code, String authorization_code, Decimal amount)
         {
 
-            var response = tx.Capture(token_ws, child_commerce_code, child_buy_order, authorization_code, amount);
+            var response = tx.Capture(token, child_commerce_code, child_buy_order, authorization_code, amount);
 
             ViewBag.Response = response;
             ViewBag.Resp = ToJson(response);
-            ViewBag.TokenWs = token_ws;
+            ViewBag.Token = token;
             ViewBag.Amount = amount;
             ViewBag.AuthorizationCode = authorization_code;
             ViewBag.BuyOrder = buy_order;
@@ -168,8 +167,8 @@ namespace Controllers.TransaccionCompleta
             ViewBag.ChildCommerceCode = child_commerce_code;
             ViewBag.ChildBuyOrder = child_buy_order;
             ViewBag.Amount = 1000;
-            ViewBag.TokenWs = token;
-
+            ViewBag.Token = token;
+            ViewBag.CommitEndpoint = CreateUrl(ctrlName, "commit");
             ViewBag.CaptureEndpoint = CreateUrl(ctrlName, "capture");
             ViewBag.IncreaseEndpoint = CreateUrl(ctrlName, "increase_amount");
             ViewBag.IncreaseDateEndpoint = CreateUrl(ctrlName, "increase_date");
