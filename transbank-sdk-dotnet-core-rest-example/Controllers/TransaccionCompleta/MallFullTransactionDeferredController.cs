@@ -87,7 +87,7 @@ namespace Controllers.TransaccionCompleta
             ViewBag.ChildCommerceCode = child_commerce_code;
             ViewBag.ChildBuyOrder = child_buy_order;
             ViewBag.Amount = 1000;
-            ViewBag.TokenWs = token;
+            ViewBag.Token = token;
             ViewBag.BuyOrder = response.BuyOrder;
             ViewBag.AuthorizationCode = response.Details[0].AuthorizationCode;
 
@@ -126,10 +126,10 @@ namespace Controllers.TransaccionCompleta
             return View($"{viewBase}capture.cshtml");
         }
         [Route("status")]
-        public ActionResult status(String token_ws)
+        public ActionResult Status(String token)
         {
 
-            var response = tx.Status(token_ws);
+            var response = tx.Status(token);
 
             ViewBag.Response = response;
             var originalResponse = response.OriginalResponse;
@@ -139,14 +139,14 @@ namespace Controllers.TransaccionCompleta
             return View($"{viewBase}status.cshtml");
         }
         [Route("refund")]
-        public ActionResult Refund(String token_ws, String buy_order, String child_buy_order, String child_commerce_code, String authorization_code, int amount)
+        public ActionResult Refund(String token, String buy_order, String child_buy_order, String child_commerce_code, String authorization_code, int amount)
         {
 
-            var response = tx.Refund(token_ws, child_buy_order, child_commerce_code, amount);
+            var response = tx.Refund(token, child_buy_order, child_commerce_code, amount);
 
             ViewBag.Response = response;
             ViewBag.Resp = ToJson(response);
-            ViewBag.TokenWs = token_ws;
+            ViewBag.Token = token;
 
             return View($"{viewBase}refund.cshtml");
         }
