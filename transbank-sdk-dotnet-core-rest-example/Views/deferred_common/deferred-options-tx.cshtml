@@ -1,5 +1,6 @@
-﻿<form action="@ViewBag.CaptureEndpoint" method="POST">
-    <input type="hidden" name="token_ws" value="@ViewBag.TokenWS">
+﻿
+<form action="@ViewBag.CaptureEndpoint" method="POST">
+    <input type="hidden" name="token" value="@ViewBag.Token">
     <input type="hidden" name="buy_order" value="@ViewBag.BuyOrder">
     <input type="hidden" name="child_buy_order" value="@ViewBag.ChildBuyOrder">
     <input type="hidden" name="child_commerce_code" value="@ViewBag.ChildCommerceCode">
@@ -9,15 +10,14 @@
             <button type="submit" class="btn btn-primary">CAPTURAR</button>
         </div>
         <div class="col-4">
-             <div class="form-floating mb-3">
-               <input type="text" class="form-control" name="amount" id="amount" value="@ViewBag.Amount">
-               <label for="amount">Monto a capturar</label>
-             </div>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" name="amount" id="amount" value="@ViewBag.Amount">
+                <label for="amount">Monto a capturar</label>
+            </div>
         </div>
         <div class="col-4">
             Capturar la transacción para realmente capturar el dinero que habia sido previamente reservado.
         </div>
     </div>
 </form>
-
 
