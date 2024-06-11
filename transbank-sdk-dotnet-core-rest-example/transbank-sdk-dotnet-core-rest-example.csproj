@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
-    <PackageReference Include="TransbankSDK" Version="6.0.0" />
+    <PackageReference Include="TransbankSDK" Version="7.0.1" />
   </ItemGroup>
 
   <ItemGroup>
