@@ -19,7 +19,8 @@ namespace Controllers.TransaccionCompleta
         public FullTransactionController(IUrlHelperFactory urlHelperFactory, IActionContextAccessor actionContextAccessor) :
             base(urlHelperFactory, actionContextAccessor)
         {
-            tx = new FullTransaction(new Options(IntegrationCommerceCodes.TRANSACCION_COMPLETA, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+           
+            tx = FullTransaction.buildForIntegration(IntegrationCommerceCodes.TRANSACCION_COMPLETA, IntegrationApiKeys.WEBPAY);
         }
         [Route("form")]
         public ActionResult Form()
@@ -61,7 +62,7 @@ namespace Controllers.TransaccionCompleta
 
             ViewBag.Response = response;
             ViewBag.Amount = response.Amount;
-            ViewBag.TokenWs = token;
+            ViewBag.Token = token;
             ViewBag.Resp = ToJson(response);
             ViewBag.StatusEndpoint = CreateUrl(ctrlName, "status");
             ViewBag.RefundEndpoint = CreateUrl(ctrlName, "refund");
@@ -79,7 +80,7 @@ namespace Controllers.TransaccionCompleta
 
             ViewBag.Response = response;
             ViewBag.Amount = response.Amount;
-            ViewBag.TokenWs = token;
+            ViewBag.Token = token;
             ViewBag.Resp = ToJson(response);
             ViewBag.StatusEndpoint = CreateUrl(ctrlName, "status");
             ViewBag.RefundEndpoint = CreateUrl(ctrlName, "refund");
@@ -94,7 +95,7 @@ namespace Controllers.TransaccionCompleta
             var response = tx.Installments(token, installments);
 
             ViewBag.Response = response;
-            ViewBag.token = token;
+            ViewBag.Token = token;
             ViewBag.id_query_installments = response.IdQueryInstallments;
             ViewBag.Resp = ToJson(response);
 
@@ -104,10 +105,10 @@ namespace Controllers.TransaccionCompleta
             return View($"{viewBase}installments.cshtml");
         }
         [Route("status")]
-        public ActionResult status(String token_ws)
+        public ActionResult Status(String token)
         {
 
-            var response = tx.Status(token_ws);
+            var response = tx.Status(token);
 
             ViewBag.Response = response;
             var originalResponse = response.OriginalResponse;
@@ -117,10 +118,10 @@ namespace Controllers.TransaccionCompleta
             return View($"{viewBase}status.cshtml");
         }
         [Route("refund")]
-        public ActionResult Refund(String token_ws, Decimal amount)
+        public ActionResult Refund(String token, Decimal amount)
         {
 
-            var response = tx.Refund(token_ws, amount);
+            var response = tx.Refund(token, amount);
 
             ViewBag.Response = response;
             ViewBag.Resp = ToJson(response);

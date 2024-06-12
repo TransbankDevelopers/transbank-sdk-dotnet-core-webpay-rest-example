@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using System;
 using System.Collections.Generic;
 using Transbank.Common;
-using Transbank.Patpass.PatpassComercio;
+using Transbank.Patpass;
 using Transbank.Webpay.Common;
 using Transbank.Webpay.Oneclick;
-
+using Transbank.Exceptions;
 namespace Controllers.Oneclick
 {
 
@@ -22,8 +22,9 @@ namespace Controllers.Oneclick
         public OneclickMallDeferredController(IUrlHelperFactory urlHelperFactory, IActionContextAccessor actionContextAccessor) :
             base(urlHelperFactory, actionContextAccessor)
         {
-            ins = new MallInscription(new Options(IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
-            tx = new MallTransaction(new Options(IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+      
+            ins = MallInscription.buildForIntegration(IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED, IntegrationApiKeys.WEBPAY);
+            tx = MallTransaction.buildForIntegration(IntegrationCommerceCodes.ONECLICK_MALL_DEFERRED, IntegrationApiKeys.WEBPAY);
         }
         [Route("start")]
         public ActionResult Start()
@@ -47,26 +48,44 @@ namespace Controllers.Oneclick
         public ActionResult Finish(String tbk_token)
         {
             var response = ins.Finish(tbk_token);
-            ViewBag.Response = response;
-            ViewBag.Resp = ToJson(response);
-            ViewBag.Token = tbk_token;
-            ViewBag.Username = HttpContext.Session.GetString("username");
-            ViewBag.TbkUser = response.TbkUser;
-            ViewBag.Amount1 = 1000;
-            ViewBag.installments1 = 4;
-            ViewBag.Amount2 = 500;
-            ViewBag.installments2 = 5;
-            ViewBag.AuthorizeEndpoint = CreateUrl(ctrlName, "authorize");
-            ViewBag.DeleteEndpoint = CreateUrl(ctrlName, "delete");
+            if (tbk_token != "" && response.TbkUser == null)
+            {
 
-            return View($"{viewBase}finish.cshtml");
+                ViewBag.Response = response;
+                ViewBag.Resp = ToJson(response);
+                ViewBag.Token = tbk_token;
+                return View($"{viewBase}abort.cshtml");
+
+            }
+            else
+            {
+                ViewBag.Response = response;
+                ViewBag.Resp = ToJson(response);
+                ViewBag.Token = tbk_token;
+                ViewBag.Username = HttpContext.Session.GetString("username");
+                ViewBag.TbkUser = response.TbkUser;
+                ViewBag.Amount1 = 1000;
+                ViewBag.installments1 = 4;
+                ViewBag.Amount2 = 500;
+                ViewBag.installments2 = 5;
+                ViewBag.AuthorizeEndpoint = CreateUrl(ctrlName, "authorize");
+                ViewBag.DeleteEndpoint = CreateUrl(ctrlName, "delete");
+
+                return View($"{viewBase}finish.cshtml");
+            }
         }
         [Route("delete")]
         public ActionResult Delete(String username, String tbk_user)
         {
-            var response = ins.Delete(tbk_user, username);
-            ViewBag.Resp = ToJson(response);
-
+            try
+            {
+                var response = ins.Delete(tbk_user, username);
+                ViewBag.Resp = ToJson(response);
+            }
+            catch (InscriptionDeleteException e)
+            {
+                ViewBag.Resp = e.Code;
+            }
             return View($"{viewBase}delete.cshtml");
         }
         [Route("authorize")]
@@ -121,94 +140,6 @@ namespace Controllers.Oneclick
             ViewBag.RefundEndpoint = CreateUrl(ctrlName, "refund");
 
             return View($"{viewBase}capture.cshtml");
-        }
-        [Route("increase_amount")]
-        public ActionResult IncreaseAmount(String token_ws, String buy_order, String child_buy_order, String child_commerce_code, String authorization_code, Decimal amount)
-        {
-
-            var response = tx.IncreaseAmount(child_commerce_code, child_buy_order, authorization_code, amount);
-
-            ViewBag.Resp = ToJson(response);
-            ViewBag.response = response;
-            ViewBag.BuyOrder = buy_order;
-            ViewBag.ChildBuyOrder = child_buy_order;
-            ViewBag.ChildCommerceCode = child_commerce_code;
-            ViewBag.Amount = amount;
-            ViewBag.AuthorizationCode = authorization_code;
-
-            ViewBag.CaptureEndpoint = CreateUrl(ctrlName, "capture");
-            ViewBag.IncreaseEndpoint = CreateUrl(ctrlName, "increase_amount");
-            ViewBag.IncreaseDateEndpoint = CreateUrl(ctrlName, "increase_date");
-            ViewBag.ReverseEndpoint = CreateUrl(ctrlName, "reverse");
-            ViewBag.HistoryEndpoint = CreateUrl(ctrlName, "history");
-
-            return View($"{viewBase}increase-amount.cshtml");
-        }
-        [Route("increase_date")]
-        public ActionResult IncreaseDate(String token_ws, String buy_order, String child_buy_order, String child_commerce_code, String authorization_code, Decimal amount)
-        {
-
-            var response = tx.IncreaseAuthorizationDate(child_commerce_code, child_buy_order, authorization_code);
-
-            ViewBag.Resp = ToJson(response);
-            ViewBag.response = response;
-            ViewBag.BuyOrder = buy_order;
-            ViewBag.ChildBuyOrder = child_buy_order;
-            ViewBag.ChildCommerceCode = child_commerce_code;
-            ViewBag.Amount = amount;
-            ViewBag.AuthorizationCode = authorization_code;
-
-            ViewBag.CaptureEndpoint = CreateUrl(ctrlName, "capture");
-            ViewBag.IncreaseEndpoint = CreateUrl(ctrlName, "increase_amount");
-            ViewBag.IncreaseDateEndpoint = CreateUrl(ctrlName, "increase_date");
-            ViewBag.ReverseEndpoint = CreateUrl(ctrlName, "reverse");
-            ViewBag.HistoryEndpoint = CreateUrl(ctrlName, "history");
-
-            return View($"{viewBase}increase-date.cshtml");
-        }
-        [Route("reverse")]
-        public ActionResult Reverse(String token_ws, String buy_order, String child_buy_order, String child_commerce_code, String authorization_code, Decimal amount)
-        {
-
-            var response = tx.ReversePreAuthorizedAmount(child_commerce_code, child_buy_order, authorization_code, amount);
-
-            ViewBag.Resp = ToJson(response);
-            ViewBag.response = response;
-            ViewBag.BuyOrder = buy_order;
-            ViewBag.ChildBuyOrder = child_buy_order;
-            ViewBag.ChildCommerceCode = child_commerce_code;
-            ViewBag.Amount = amount;
-            ViewBag.AuthorizationCode = authorization_code;
-
-            ViewBag.CaptureEndpoint = CreateUrl(ctrlName, "capture");
-            ViewBag.IncreaseEndpoint = CreateUrl(ctrlName, "increase_amount");
-            ViewBag.IncreaseDateEndpoint = CreateUrl(ctrlName, "increase_date");
-            ViewBag.ReverseEndpoint = CreateUrl(ctrlName, "reverse");
-            ViewBag.HistoryEndpoint = CreateUrl(ctrlName, "history");
-
-            return View($"{viewBase}reverse-amount.cshtml");
-        }
-        [Route("history")]
-        public ActionResult History(String token_ws, String buy_order, String child_buy_order, String child_commerce_code, String authorization_code, Decimal amount)
-        {
-
-            var response = tx.DeferredCaptureHistory(child_commerce_code, child_buy_order, authorization_code);
-
-            ViewBag.Resp = ToJson(response);
-            ViewBag.response = response;
-            ViewBag.BuyOrder = buy_order;
-            ViewBag.ChildBuyOrder = child_buy_order;
-            ViewBag.ChildCommerceCode = child_commerce_code;
-            ViewBag.Amount = amount;
-            ViewBag.AuthorizationCode = authorization_code;
-
-            ViewBag.CaptureEndpoint = CreateUrl(ctrlName, "capture");
-            ViewBag.IncreaseEndpoint = CreateUrl(ctrlName, "increase_amount");
-            ViewBag.IncreaseDateEndpoint = CreateUrl(ctrlName, "increase_date");
-            ViewBag.ReverseEndpoint = CreateUrl(ctrlName, "reverse");
-            ViewBag.HistoryEndpoint = CreateUrl(ctrlName, "history");
-
-            return View($"{viewBase}history.cshtml");
         }
         [Route("status")]
         public ActionResult Status(String buy_order)

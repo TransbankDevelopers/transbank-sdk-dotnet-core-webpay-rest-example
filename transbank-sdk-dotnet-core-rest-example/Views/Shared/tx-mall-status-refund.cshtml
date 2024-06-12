@@ -6,7 +6,7 @@
 <div class="row">
     <div class="col-6">
         <form action="@ViewBag.StatusEndpoint" method="POST">
-          <input type="hidden" name="token_ws" value="@ViewBag.TokenWs">
+          <input type="hidden" name="token" value="@ViewBag.Token">
           <button type="submit" class="btn btn-primary">CONSULTAR ESTADO</button>
         </form>
     </div>
@@ -15,7 +15,7 @@
           <div class="card-body">Formulario de reembolso
             <h6 class="card-title">Formulario de reembolso</h6>
             <form action="@ViewBag.RefundEndpoint" method="POST">
-              <input type="hidden" name="token_ws" value="@ViewBag.TokenWs">
+              <input type="hidden" name="token" value="@ViewBag.Token">
               <div class="mb-3">
                   <label for="child_commerce_code" class="form-label">Código de tienda hija</label>
                   <input type="text" class="form-control" name="child_commerce_code" value="@ViewBag.ChildCommerceCode">

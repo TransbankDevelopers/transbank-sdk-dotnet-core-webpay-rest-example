@@ -9,6 +9,7 @@ using System.Net;
 using Transbank.Common;
 using Transbank.Webpay.Common;
 using Transbank.Webpay.Oneclick;
+using Transbank.Exceptions;
 using System.Collections.Generic;
 
 namespace Controllers.Oneclick
@@ -25,8 +26,9 @@ namespace Controllers.Oneclick
         public OneclickMallController(IUrlHelperFactory urlHelperFactory, IActionContextAccessor actionContextAccessor) :
             base(urlHelperFactory, actionContextAccessor)
         {
-            inscription = new MallInscription(new Options(IntegrationCommerceCodes.ONECLICK_MALL, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
-            tx = new MallTransaction(new Options(IntegrationCommerceCodes.ONECLICK_MALL, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+           
+            inscription = MallInscription.buildForIntegration(IntegrationCommerceCodes.ONECLICK_MALL,IntegrationApiKeys.WEBPAY);
+            tx =  MallTransaction.buildForIntegration(IntegrationCommerceCodes.ONECLICK_MALL, IntegrationApiKeys.WEBPAY);
         }
 
         [Route("start")]
@@ -51,26 +53,48 @@ namespace Controllers.Oneclick
         public ActionResult Finish(String tbk_token)
         {
             var response = inscription.Finish(tbk_token);
-            ViewBag.Response = response;
-            ViewBag.Resp = ToJson(response);
-            ViewBag.Token = tbk_token;
-            ViewBag.Username = HttpContext.Session.GetString("username");
-            ViewBag.TbkUser = response.TbkUser;
-            ViewBag.Amount1 = 1000;
-            ViewBag.installments1 = 4;
-            ViewBag.Amount2 = 500;
-            ViewBag.installments2 = 5;
-            ViewBag.AuthorizeEndpoint = CreateUrl(ctrlName, "authorize");
-            ViewBag.DeleteEndpoint = CreateUrl(ctrlName, "delete");
+           
+            if (tbk_token != "" && response.TbkUser==null)
+            {        
+                ViewBag.Response = response;
+                ViewBag.Resp = ToJson(response);
+                ViewBag.Token = tbk_token;
+                return View($"{viewBase}abort.cshtml");
+            }
+            else
+            {
+                ViewBag.Response = response;
+                ViewBag.Resp = ToJson(response);
+                ViewBag.Token = tbk_token;
+                ViewBag.Username = HttpContext.Session.GetString("username");
+                ViewBag.TbkUser = response.TbkUser;
+                ViewBag.Amount1 = 1000;
+                ViewBag.installments1 = 4;
+                ViewBag.Amount2 = 500;
+                ViewBag.installments2 = 5;
+                ViewBag.AuthorizeEndpoint = CreateUrl(ctrlName, "authorize");
+                ViewBag.DeleteEndpoint = CreateUrl(ctrlName, "delete");
 
-            return View($"{viewBase}finish.cshtml");
+                return View($"{viewBase}finish.cshtml");
+            }
         }
+     
+     
         [Route("delete")]
         public ActionResult Delete(String username, String tbk_user)
         {
-            var response = inscription.Delete(tbk_user, username);
-            ViewBag.Resp = ToJson(response);
+            try
+            {
+                var response = inscription.Delete(tbk_user, username);
+                ViewBag.Resp = ToJson(response);
 
+                //   return View($"{viewBase}delete.cshtml");
+            }
+            catch (InscriptionDeleteException e)
+            {
+                ViewBag.Resp = e.Code;
+              //  return View("Error");
+            }
             return View($"{viewBase}delete.cshtml");
         }
         [Route("authorize")]
@@ -97,10 +121,8 @@ namespace Controllers.Oneclick
             ViewBag.ChildBuyOrder = response.Details[0].BuyOrder;
             ViewBag.ChildCommerceCode = response.Details[0].CommerceCode;
             ViewBag.Amount = response.Details[0].Amount;
-
             ViewBag.RefundEndpoint = CreateUrl(ctrlName, "refund");
             ViewBag.StatusEndpoint = CreateUrl(ctrlName, "status");
-
             return View($"{viewBase}authorize.cshtml");
         }
         [Route("refund")]
@@ -117,7 +139,6 @@ namespace Controllers.Oneclick
             var response = tx.Status(buy_order);
             ViewBag.Response = response;
             ViewBag.Resp = ToJson(response);
-
             return View($"{viewBase}status.cshtml");
         }
     }

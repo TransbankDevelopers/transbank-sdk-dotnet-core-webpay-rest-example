@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Newtonsoft.Json.Linq;
 using System;
 using Transbank.Common;
 using Transbank.Webpay.Common;
@@ -19,7 +20,8 @@ namespace Controllers.Webpay
         public WebpayPlusDeferredController(IUrlHelperFactory urlHelperFactory, IActionContextAccessor actionContextAccessor) : 
             base(urlHelperFactory, actionContextAccessor)
         {
-            tx = new Transaction(new Options(IntegrationCommerceCodes.WEBPAY_PLUS_DEFERRED, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+         
+            tx = Transaction.buildForIntegration(IntegrationCommerceCodes.WEBPAY_PLUS_DEFERRED, IntegrationApiKeys.WEBPAY);
         }
         [Route("create")]
         public ActionResult Create()
@@ -37,8 +39,8 @@ namespace Controllers.Webpay
             ViewBag.SessionId = sessionId;
             ViewBag.Amount = amount;
             ViewBag.ReturnUrl = returnUrl;
-          
-            ViewBag.Url = response.Url;
+			TempData["Token"] = response.Token;
+			ViewBag.Url = response.Url;
             ViewBag.Token = response.Token;
 
             return View($"{viewBase}create.cshtml");
@@ -46,9 +48,29 @@ namespace Controllers.Webpay
         [Route("commit")]
         public ActionResult Commit(String token_ws)
         {
-            var response = tx.Commit(token_ws);
-            AddDetailModelDeferred(response, token_ws, response.BuyOrder, response.AuthorizationCode, response.Amount);
-            return View($"{viewBase}commit.cshtml");
+			var token = TempData["Token"] as string;
+			var status = tx.Status(token);
+            if (token_ws == null)
+            {
+                var sessionId = status.SessionId;
+                var buyOrder = status.BuyOrder;
+                var tbkId = token;
+                var data = new
+                {
+                    SessionId = sessionId,
+                    BuyOrder = buyOrder,
+                    TBK_ID = tbkId
+                };
+
+                ViewBag.Status = ToJson(data);
+                return View($"{viewBase}abort.cshtml");
+            }
+            else
+            {
+                var response = tx.Commit(token_ws);
+                AddDetailModelDeferred(response, token_ws, response.BuyOrder, response.AuthorizationCode, response.Amount);
+                return View($"{viewBase}commit.cshtml");
+            }
         }
         [Route("refund")]
         public ActionResult Refund()
@@ -89,50 +111,6 @@ namespace Controllers.Webpay
             ViewBag.RefundEndpoint = CreateUrl(ctrlName, "refund");
             ViewBag.StatusEndpoint = CreateUrl(ctrlName, "status");
             return View($"{viewBase}capture.cshtml");
-        }
-        [Route("increase_amount")]
-        public ActionResult IncreaseAmount()
-        {
-            var token = Request.Form["token_ws"];
-            var buyOrder = Request.Form["buy_order"];
-            var authorizationCode = Request.Form["authorization_code"];
-            decimal amount = decimal.Parse(Request.Form["amount"]);
-            var response = tx.IncreaseAmount(token, buyOrder, authorizationCode, amount);
-            AddDetailModelDeferred(response, token, buyOrder, response.AuthorizationCode, response.TotalAmount);
-            return View($"{viewBase}increase-amount.cshtml");
-        }
-        [Route("reverse")]
-        public ActionResult ReverseAmount()
-        {
-            var token = Request.Form["token_ws"];
-            var buyOrder = Request.Form["buy_order"];
-            var authorizationCode = Request.Form["authorization_code"];
-            decimal amount = decimal.Parse(Request.Form["amount"]);
-            var response = tx.ReversePreAuthorizedAmount(token, buyOrder, authorizationCode, amount);
-            AddDetailModelDeferred(response, token, buyOrder, response.AuthorizationCode, response.TotalAmount);
-            return View($"{viewBase}reverse-amount.cshtml");
-        }
-        [Route("increase_date")]
-        public ActionResult IncreaseDate()
-        {
-            var token = Request.Form["token_ws"];
-            var buyOrder = Request.Form["buy_order"];
-            var authorizationCode = Request.Form["authorization_code"];
-            decimal amount = decimal.Parse(Request.Form["amount"]);
-            var response = tx.IncreaseAuthorizationDate(token, buyOrder, authorizationCode);
-            AddDetailModelDeferred(response, token, buyOrder, response.AuthorizationCode, response.TotalAmount);
-            return View($"{viewBase}increase-date.cshtml");
-        }
-        [Route("history")]
-        public ActionResult History()
-        {
-            var token = Request.Form["token_ws"];
-            var buyOrder = Request.Form["buy_order"];
-            var authorizationCode = Request.Form["authorization_code"];
-            decimal amount = decimal.Parse(Request.Form["amount"]);
-            var response = tx.DeferredCaptureHistory(token);
-            AddDetailModelDeferred(response, token, buyOrder, authorizationCode, amount);
-            return View($"{viewBase}history.cshtml");
         }
         private void AddDetailModelDeferred(Object response, String tokenWs, String buyOrder, String authorizationCode, decimal? amount)
         {

@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Transbank.Common;
 using Transbank.Patpass.Common;
-using Transbank.Patpass.PatpassComercio;
+using Transbank.Patpass;
+using Transbank.PatpassComercio;
 
 namespace Controllers.Patpass
 {
@@ -12,11 +13,13 @@ namespace Controllers.Patpass
     public class PatpassComercioController : BaseController
     {
         private Inscription inscription;
+        
 
         public PatpassComercioController(IUrlHelperFactory urlHelperFactory, IActionContextAccessor actionContextAccessor) :
             base(urlHelperFactory, actionContextAccessor)
         {
-            inscription = new Inscription(new Options(IntegrationCommerceCodes.PATPASS_COMERCIO, IntegrationApiKeys.PATPASS_COMERCIO, PatpassComercioIntegrationType.Test));
+           
+            inscription =Inscription.buildForIntegration(IntegrationCommerceCodes.PATPASS_COMERCIO, IntegrationApiKeys.PATPASS_COMERCIO);
         }
 
         [Route("start")]
@@ -24,13 +27,15 @@ namespace Controllers.Patpass
         {
             var urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
 
-            string returnUrl = urlHelper.Action("commit", "patpass_comercio", null, Request.Scheme);
+            // string returnUrl = urlHelper.Action("commit", "patpass_comercio", null, Request.Scheme);
+             string returnUrl = "https://micomercio.com";
             string name = "Isaac";
             string lastName = "Newton";
             string secondLastName = "Gonzales";
             string rut = "11111111-1";
             string serviceId = "Service_" + GetRandomNumber();
-            string finalUrl = urlHelper.Action("voucher_return", "patpass_comercio", null, Request.Scheme);
+            // string finalUrl = urlHelper.Action("voucher_return", "patpass_comercio", null, Request.Scheme);
+            string finalUrl = "https://micomercio.com";
             decimal maxAmount = 100000;
             string phone = "123456734";
             string cellPhone = "123456723";

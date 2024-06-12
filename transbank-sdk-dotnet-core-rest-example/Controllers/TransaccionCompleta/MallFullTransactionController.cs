@@ -21,7 +21,8 @@ namespace Controllers.TransaccionCompleta
         public MallFullTransactionController(IUrlHelperFactory urlHelperFactory, IActionContextAccessor actionContextAccessor) :
             base(urlHelperFactory, actionContextAccessor)
         {
-            tx = new MallFullTransaction(new Options(IntegrationCommerceCodes.TRANSACCION_COMPLETA_MALL, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+            //tx = new MallFullTransaction(new Options(IntegrationCommerceCodes.TRANSACCION_COMPLETA_MALL, IntegrationApiKeys.WEBPAY, WebpayIntegrationType.Test));
+            tx = MallFullTransaction.buildForIntegration(IntegrationCommerceCodes.TRANSACCION_COMPLETA_MALL, IntegrationApiKeys.WEBPAY);
         }
         [Route("form")]
         public ActionResult Form()
@@ -91,7 +92,7 @@ namespace Controllers.TransaccionCompleta
             ViewBag.ChildCommerceCode = child_commerce_code;
             ViewBag.ChildBuyOrder = child_buy_order;
             ViewBag.Amount = 1000;
-            ViewBag.TokenWs = token;
+            ViewBag.Token = token;
 
             ViewBag.StatusEndpoint = CreateUrl(ctrlName, "status");
             ViewBag.RefundEndpoint = CreateUrl(ctrlName, "refund");
@@ -119,8 +120,10 @@ namespace Controllers.TransaccionCompleta
 
             ViewBag.Response = response;
             ViewBag.Amount = 1000;
-            ViewBag.TokenWs = token;
+            ViewBag.Token = token;
             ViewBag.Resp = ToJson(response);
+            ViewBag.ChildCommerceCode = child_commerce_code;
+            ViewBag.ChildBuyOrder = child_buy_order;
             ViewBag.StatusEndpoint = CreateUrl(ctrlName, "status");
             ViewBag.RefundEndpoint = CreateUrl(ctrlName, "refund");
 
@@ -155,10 +158,10 @@ namespace Controllers.TransaccionCompleta
             return View($"{viewBase}installments.cshtml");
         }
         [Route("status")]
-        public ActionResult status(String token_ws)
+        public ActionResult status(String token)
         {
 
-            var response = tx.Status(token_ws);
+            var response = tx.Status(token);
 
             ViewBag.Response = response;
             var originalResponse = response.OriginalResponse;
@@ -168,14 +171,14 @@ namespace Controllers.TransaccionCompleta
             return View($"{viewBase}status.cshtml");
         }
         [Route("refund")]
-        public ActionResult Refund(String token_ws, int amount, String child_commerce_code, String child_buy_order)
+        public ActionResult Refund(String token, int amount, String child_commerce_code, String child_buy_order)
         {
 
-            var response = tx.Refund(token_ws, child_buy_order, child_commerce_code, amount);
+            var response = tx.Refund(token, child_buy_order, child_commerce_code, amount);
 
             ViewBag.Response = response;
             ViewBag.Resp = ToJson(response);
-            ViewBag.TokenWs = token_ws;
+            ViewBag.Token = token;
 
             return View($"{viewBase}refund.cshtml");
         }

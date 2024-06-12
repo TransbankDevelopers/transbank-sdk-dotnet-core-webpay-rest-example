@@ -1,0 +1,24 @@
+﻿   @{Html.RenderPartial("~/Views/Shared/navbar-oneclick.cshtml");}
+
+<style>
+	.row {
+		padding-bottom: 20px;
+	}
+</style>
+
+<div class="row">
+	<div class="col">
+		<h2>Anulación de compra</h2>
+		<p>El pago de la compra ha sido anulado por el usuario. En esta etapa, después de abandonar el formulario de pago, no es necesario realizar la confirmación. Aquí te proporcionamos información esencial sobre el estado de la transacción anulada:</p>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col m4">
+		<h5>Datos recibidos</h5>
+		<p>Luego de que se anula la compra en el formulario de pago recibirás un POST con lo siguiente:</p>
+	</div>
+	<div class="col m8">
+		<pre><code> @ViewBag.Resp </code></pre>
+	</div>
+</div>
