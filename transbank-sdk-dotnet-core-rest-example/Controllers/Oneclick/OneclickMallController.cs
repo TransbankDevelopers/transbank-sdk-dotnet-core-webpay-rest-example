@@ -69,9 +69,9 @@ namespace Controllers.Oneclick
                 ViewBag.Username = HttpContext.Session.GetString("username");
                 ViewBag.TbkUser = response.TbkUser;
                 ViewBag.Amount1 = 1000;
-                ViewBag.installments1 = 4;
+                ViewBag.installments1 = 0;
                 ViewBag.Amount2 = 500;
-                ViewBag.installments2 = 5;
+                ViewBag.installments2 = 0;
                 ViewBag.AuthorizeEndpoint = CreateUrl(ctrlName, "authorize");
                 ViewBag.DeleteEndpoint = CreateUrl(ctrlName, "delete");
 
