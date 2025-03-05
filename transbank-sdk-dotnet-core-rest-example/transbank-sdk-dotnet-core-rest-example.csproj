@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>transbank_sdk_dotnet_core_rest_example</RootNamespace>
     <UserSecretsId>96991322-11b9-480f-9490-783676f73e39</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
@@ -19,7 +19,8 @@
 	<Folder Include="Views\webpay_plus_deferred\" />
 	<Folder Include="Views\oneclick_mall\" />
 	<Folder Include="Views\transaccion_completa\" />
-	<Folder Include="Views\transaccion_completa_deferred\" />
+	<Folder Include="Views\transaccion_completa_deferred\"
+ />
   </ItemGroup>
 
 </Project>
